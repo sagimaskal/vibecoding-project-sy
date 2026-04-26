@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מעקב תואר - האוניברסיטה העברית</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #f8fafc;
+        }
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">מעקב התקדמות לתואר</h1>
+            <p class="text-lg text-slate-600">כלכלה ומנהל עסקים | האוניברסיטה העברית</p>
+        </header>
+
+        <!-- Degree Cards Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- Economics Card -->
+            <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                <div class="bg-blue-900 p-4 text-white">
+                    <h2 class="text-2xl font-bold">כלכלה</h2>
+                    <p class="text-blue-100 opacity-90">סה"כ נדרש: 64 נ"ז</p>
+                </div>
+                <div class="p-6 space-y-6">
+                    <!-- Overall Economics Progress -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="font-bold text-slate-700">התקדמות כללית</span>
+                            <span class="font-bold text-blue-900">32 / 64 נ"ז</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden border border-slate-200">
+                            <div class="bg-blue-600 h-full progress-bar" style="width: 50%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Category Breakdown Economics -->
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-slate-600">קורסי חובה (40 נ"ז)</span>
+                                <span class="font-medium">20 / 40</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-blue-400 h-full" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-slate-600">בחירה (8 נ"ז)</span>
+                                <span class="font-medium">4 / 8</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-blue-400 h-full" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-slate-600">ליבה (8 נ"ז)</span>
+                                <span class="font-medium">4 / 8</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-blue-400 h-full" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <span class="block text-xs text-slate-500">מחקר (4 נ"ז)</span>
+                                <span class="text-sm font-bold text-orange-600">0 / 4</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <span class="block text-xs text-slate-500">אבני פינה (4 נ"ז)</span>
+                                <span class="text-sm font-bold text-green-600">4 / 4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Administration Card -->
+            <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                <div class="bg-emerald-900 p-4 text-white">
+                    <h2 class="text-2xl font-bold">מנהל עסקים</h2>
+                    <p class="text-emerald-100 opacity-90">סה"כ נדרש: 60 נ"ז</p>
+                </div>
+                <div class="p-6 space-y-6">
+                    <!-- Overall Business Progress -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="font-bold text-slate-700">התקדמות כללית</span>
+                            <span class="font-bold text-emerald-900">18 / 60 נ"ז</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden border border-slate-200">
+                            <div class="bg-emerald-600 h-full progress-bar" style="width: 30%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Category Breakdown Business -->
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-slate-600">חובה (27 נ"ז)</span>
+                                <span class="font-medium">10 / 27</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-emerald-400 h-full" style="width: 37%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-slate-600">בחירה (17 נ"ז)</span>
+                                <span class="font-medium">0 / 17</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-emerald-400 h-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-slate-600">בחירת חובה (8 נ"ז)</span>
+                                <span class="font-medium">4 / 8</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-emerald-400 h-full" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <span class="block text-xs text-slate-500">מחקר (4 נ"ז)</span>
+                                <span class="text-sm font-bold text-orange-600">0 / 4</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <span class="block text-xs text-slate-500">אבני פינה (4 נ"ז)</span>
+                                <span class="text-sm font-bold text-green-600">4 / 4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Sidebar: Add Course Form -->
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-6 border-b pb-4">הוספת קורס חדש</h3>
+                    <form id="courseForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">שם הקורס</label>
+                            <input type="text" id="name" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">מספר קורס</label>
+                            <input type="text" id="code" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none" placeholder="לדוגמה: 57107">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">נ"ז</label>
+                                <input type="number" id="credits" step="0.5" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">שנה/סמסטר</label>
+                                <input type="text" id="term" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none" placeholder="תשפ״ד א">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">שיוך לתואר</label>
+                            <select id="major" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none">
+                                <option value="economics">כלכלה</option>
+                                <option value="business">מנהל עסקים</option>
+                                <option value="both">שניהם (קורס משותף)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">קטגוריה</label>
+                            <select id="category" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none">
+                                <option>חובה</option>
+                                <option>בחירה</option>
+                                <option>ליבה / בחירת חובה</option>
+                                <option>מחקר</option>
+                                <option>אבני פינה</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center pt-2">
+                            <input type="checkbox" id="isShared" class="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500">
+                            <label for="isShared" class="mr-2 text-sm text-slate-600">סמן כקורס משותף (למניעת כפל)</label>
+                        </div>
+                        <button type="submit" class="w-full bg-slate-900 text-white font-bold py-3 px-4 rounded-xl hover:bg-slate-800 transition shadow-lg mt-4">
+                            שמור קורס
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Main: Course Table -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <h3 class="text-xl font-bold text-slate-800">פירוט קורסים שהושלמו</h3>
+                        <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-xs font-bold">8 קורסים</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-600 text-xs uppercase font-bold border-b border-slate-200">
+                                    <th class="px-6 py-4">קוד</th>
+                                    <th class="px-6 py-4">שם קורס</th>
+                                    <th class="px-6 py-4">נ"ז</th>
+                                    <th class="px-6 py-4">שיוך</th>
+                                    <th class="px-6 py-4">קטגוריה</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 text-sm font-mono text-slate-500">57107</td>
+                                    <td class="px-6 py-4 text-sm font-bold text-slate-900">מבוא למיקרו</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">4</td>
+                                    <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">כלכלה</span></td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">חובה</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 text-sm font-mono text-slate-500">55101</td>
+                                    <td class="px-6 py-4 text-sm font-bold text-slate-900">יסודות החשבונאות</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">6</td>
+                                    <td class="px-6 py-4"><span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs">מנהל עסקים</span></td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">חובה</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 text-sm font-mono text-slate-500">57301</td>
+                                    <td class="px-6 py-4 text-sm font-bold text-slate-900">סטטיסטיקה א'</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">4</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex gap-1">
+                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">כלכלה</span>
+                                            <span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs">מנהל עסקים</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-bold text-indigo-600">חובה (משותף)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 text-sm font-mono text-slate-500">00101</td>
+                                    <td class="px-6 py-4 text-sm font-bold text-slate-900">ישראל והמזה"ת</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">2</td>
+                                    <td class="px-6 py-4"><span class="px-2 py-1 bg-slate-100 text-slate-800 rounded text-xs">כללי</span></td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">אבני פינה</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Warnings/Alerts section -->
+                <div class="mt-8 space-y-4">
+                    <div class="bg-amber-50 border-r-4 border-amber-400 p-4 rounded-l-lg shadow-sm">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                            <div class="mr-4">
+                                <h4 class="text-sm font-bold text-amber-800">סיכום דרישות חסרות</h4>
+                                <ul class="mt-1 text-sm text-amber-700 list-disc list-inside space-y-1">
+                                    <li>בכלכלה: חסרים 20 נ"ז קורסי חובה ו-4 נ"ז מחקר.</li>
+                                    <li>במנהל עסקים: חסרים 17 נ"ז קורסי בחירה.</li>
+                                    <li>אבני פינה: הושלמו 4/4 נ"ז (סיום דרישה).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Placeholder for future logic logic
+        document.getElementById('courseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('הקורס נשמר במערכת (סימולציה)');
+        });
+    </script>
+</body>
+</html>
