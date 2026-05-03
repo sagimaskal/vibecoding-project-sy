@@ -21,6 +21,9 @@ export interface Course {
   credits: number;
   major: Major;
   category: EconomicsCategory | BusinessCategory;
+  year: string;
+  semester: 'א' | 'ב' | 'קיץ';
+  grade?: number;
 }
 
 export interface DegreeRequirement {

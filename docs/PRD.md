@@ -1,23 +1,31 @@
 # PRD: Academic Resume Builder & Degree Tracker
 
 ## 1. Document Control
-- **Version:** 1.0.0
+- **Version:** 1.2.0
 - **Status:** READY FOR APPROVAL
 - **Last Updated:** 2026-05-03
+- **Role:** Single Source of Truth (SSOT)
 - **Project:** vibecoding-project-sy
 
+---
+
 ## 2. Overview & Purpose
-The objective is to provide students at the Hebrew University (HUJI) in the Economics and Business Administration double-major track with a tool to:
-1. Track academic progress against specific departmental requirements.
+### System Purpose
+The objective is to provide students at the Hebrew University (HUJI) in the Economics and Business Administration double-major track with a centralized, RTL-native portal to:
+1. Track academic progress against specific departmental requirements using a deterministic rules engine.
 2. Automatically generate a professional, English-language academic resume based on completed courses and grades.
+
+---
 
 ## 3. User Flow
 1. **Landing:** User enters name/email on Login Page.
-2. **Dashboard:** User views progress bars for Economics and Business Administration.
+2. **Dashboard:** User views progress bars and academic status for Economics and Business Administration.
 3. **Course Management:** User adds/edits courses with name, number, credits, grade, and category.
 4. **Resume Selection:** User "stars" top-performing or relevant courses for the resume.
 5. **Resume Generation:** User clicks "Generate Resume" to view a polished, LTR English CV.
 6. **Export:** User prints or saves the resume as PDF.
+
+---
 
 ## 4. System Structure (Pages)
 - **Login Page (`/`):** Simple entry point.
@@ -26,38 +34,46 @@ The objective is to provide students at the Hebrew University (HUJI) in the Econ
     - Major-specific dashboards (Economics/Business).
     - Alerts/Missing Requirements section.
     - Course Table (CRUD).
-- **Resume Page (`/dashboard/resume`):** A printable resume template (LTR).
+- **Resume Page (`/dashboard/resume`):** A printable, professional resume template (LTR).
 
-## 5. Functional Requirements
-- **Progress Tracking:** Real-time calculation of completed vs. required credits.
-- **Course CRUD:** Ability to add, read, update, and delete courses.
+---
+
+## 5. Functional Requirements & Enforceable Logic
+
+### 5.1 Course Management Logic
+| Feature | Rule | Validation / Constraint | Failure Scenario |
+| :--- | :--- | :--- | :--- |
+| **Course Identity** | `Course Number` is the unique identifier. | Must be numeric string. | Different names for same number are blocked. |
+| **Duplication** | No two courses can share the same `Course Number`. | System-wide unique constraint per user. | Alert: `"קורס זה כבר הוזן..."` |
+| **Attribution** | 1 Course = 1 Major + 1 Category. | Selection restricted to active major categories. | No "unassigned" courses allowed. |
+| **Credit Units** | Credits must be in increments of 0.5. | `Number > 0`, `Max 20`. | Input rejected if <= 0. |
+| **Grade Handling** | Grades are optional (0-100). | `0 <= Grade <= 100` OR `null`. | Input rejected if outside range. |
+
+### 5.2 Resume Builder Requirements
+- **Automatic Academic Summary:** Generate a "Skills" section based on course categories.
 - **Starred Courses:** Maximum 5 courses can be highlighted on the resume.
 - **GPA Calculation:** Average grade weighted by credits.
-- **Resume Export:** Clean, minimalist template for professional use.
+- **English Export:** Automatic translation or mapping of course categories to English for the resume view.
+
+---
 
 ## 6. Academic Rules Engine
 
-### 6.1. Economics (Total: 64 Credits)
-- **Mandatory:** 40 credits.
-- **Core:** 8 credits.
-- **Elective:** 8 credits.
-- **Research:** 4 credits.
-- **Avnei Pina (Cornerstone):** 4 credits.
+### 6.1 Credits Attribution Engine
+1.  **Selection-Based Routing**: A course is attributed to a major based on the `Major` field.
+2.  **No Double Counting**: The engine sums credits grouped by `(Major, Category)`.
+3.  **Overflow Behavior**: 
+    - If `CurrentCategoryCredits > RequiredCategoryCredits`, the category progress bar shows 100%.
+    - Surplus credits contribute to the **Major Total**.
+4.  **Major Totals**:
+    - **Economics (Target 64)**: Mandatory: 40 | Core: 8 | Elective: 8 | Research: 4 | Avnei Pina: 4.
+    - **Business (Target 60)**: Mandatory: 27 | Elective: 17 | Mandatory Elective: 8 | Research: 4 | Avnei Pina: 4.
 
-### 6.2. Business Administration (Total: 60 Credits)
-- **Mandatory:** 27 credits.
-- **Elective:** 17 credits.
-- **Mandatory Elective:** 8 credits.
-- **Research:** 4 credits.
-- **Avnei Pina (Cornerstone):** 4 credits.
-
-### 6.3. Logic Constraints
-- **Shared Courses:** Some courses may count for both majors or satisfy specific shared requirements (e.g., Statistics).
-- **Duplicate Prevention:** No two courses can have the same `number`.
+---
 
 ## 7. Data Model
 
-### 7.1. Course Interface
+### 7.1 Course Entity
 ```typescript
 export interface Course {
   id: string;
@@ -68,79 +84,92 @@ export interface Course {
   category: EconomicsCategory | BusinessCategory;
   grade?: number;
   starred?: boolean;
+  year?: 'א' | 'ב' | 'ג' | 'ד+';
+  semester?: 'א' | 'ב' | 'קיץ';
 }
 ```
 
-### 7.2. Enums
+### 7.2 Enums
 - **EconomicsCategory:** `Mandatory`, `Core`, `Elective`, `Research`, `Avnei Pina`
 - **BusinessCategory:** `Mandatory`, `Elective`, `Mandatory Elective`, `Research`, `Avnei Pina`
 
+---
+
 ## 8. System State & Persistence
-- **Client-side:** Data is stored in `localStorage` (`huji_degree_courses`) for immediate session persistence.
-- **Server-side:** Prisma + SQLite used for structured data management (Seed data).
+- **Local Storage Strategy:** 
+  - Key: `huji_degree_courses`.
+  - Hydrated on `ComponentDidMount`.
+  - Writes on every state change (Debounced).
+- **Backend (Future):** Prisma + SQLite for structured data management.
+
+---
 
 ## 9. API Design
 
-### 9.1. POST /api/courses
+### 9.1 POST /api/courses
 - **Description:** Add a new course.
-- **Request Body:** `Omit<Course, 'id'>`
-- **Validation:** `number` must be unique; `credits` and `grade` must be numeric.
-- **Success Response:** `201 Created` with the full `Course` object.
-- **Error Response:** `400 Bad Request` (Validation failed), `409 Conflict` (Duplicate course number).
+- **Validation:** Unique number, valid credits/grade.
+- **Response:** `201 Created` with Course object.
 
-### 9.2. GET /api/courses
-- **Description:** Retrieve all courses for the user.
-- **Response Structure:** `Course[]`
-- **Success Response:** `200 OK`.
+### 9.2 GET /api/courses
+- **Response:** `Course[]`.
 
-### 9.3. PATCH /api/courses/:id
-- **Description:** Update an existing course.
-- **Request Body:** `Partial<Omit<Course, 'id'>>`
-- **Success Response:** `200 OK` with updated `Course`.
-- **Error Response:** `404 Not Found`.
+### 9.3 PATCH /api/courses/:id
+- **Description:** Update course attributes.
+- **Response:** `200 OK`.
 
-### 9.4. DELETE /api/courses/:id
-- **Description:** Remove a course.
-- **Success Response:** `204 No Content`.
-- **Error Response:** `404 Not Found`.
+### 9.4 DELETE /api/courses/:id
+- **Response:** `204 No Content`.
+
+---
 
 ## 10. Component Specification
-- **MajorDashboard:** Reusable component for displaying progress bars and category breakdown.
-- **CourseTable:** Interactive list with search and CRUD actions.
-- **AddCourseModal:** Form for data entry with validation.
-- **ResumeTemplate:** LTR-styled component for resume view.
+- **MajorDashboard:** Visual progress bars for credit requirements.
+- **CourseTable:** Year/Sem, Name, ID, Credits, Grade, Actions.
+- **AddCourseModal:** Form with dynamic categories based on Major.
+- **ResumeTemplate:** Professional LTR layout for academic CV.
+
+---
 
 ## 11. UX Behavior & System Feedback
-- **RTL/LTR:** Dashboard is RTL (Hebrew); Resume is LTR (English).
-- **Real-time Updates:** Progress bars animate immediately upon course addition/deletion.
-- **Validation Messages:** Alert user when a duplicate course number is entered.
-- **Visual Cues:** Progress bar colors change (Red -> Orange -> Green) based on percentage.
+- **RTL/LTR:** Dashboard is RTL; Resume is LTR.
+- **Real-time Updates:** Progress bars and GPA update instantly.
+- **Visual Cues:** Red/Orange/Green progress bars based on completion.
+- **Alerts:** Dynamic warnings for missing mandatory requirements.
+
+---
 
 ## 12. Edge Cases & Failure Handling
-- **Changing Majors:** If a user changes the major of a course, it must be removed from the previous major's stats and added to the new one.
-- **Duplicate Numbers:** System prevents adding a course with a number that already exists in the list.
-- **Exceeding Limits:** If credits exceed a category requirement, they are shown as 100% complete, but the surplus credits do not overflow into other categories unless defined.
-- **Critical Deletion:** Deleting a course updates all GPA and progress calculations instantly.
-- **Empty State:** Display a helpful message and "Add Course" call-to-action when no courses exist.
-- **Invalid Inputs:** Grade must be 0-100; Credits must be > 0.
+- **Changing Majors:** Recalculates all stats immediately.
+- **Duplicate Numbers:** Blocked at input level with clear feedback.
+- **Exceeding Limits:** 100% cap on progress bars; total credits reflect actual sum.
+- **Empty State:** Help text and clear CTA for first-time users.
+
+---
 
 ## 13. User Scenarios
 - **Scenario A:** Student adds a mandatory Economics course and sees the "Economics - Mandatory" progress bar move.
-- **Scenario B:** Student "stars" their 5 highest-graded courses to see them featured prominently in the "Key Coursework" section of the resume.
-- **Scenario C:** Student generates a resume and notices the skills section automatically includes "Quantitative Analysis" because they completed "Statistics" and "Econometrics".
+- **Scenario B:** Student "stars" their top 5 courses to feature them in the "Key Coursework" section of the resume.
+- **Scenario C:** Senior student moves a course between majors to optimize credit distribution.
+
+---
 
 ## 14. Constraints & Rules
 - Minimalist aesthetic using Zinc/Slate colors.
 - Maximum 5 starred courses for resume.
-- Grade field is optional but required for GPA inclusion.
+- Grade must be numeric (0-100).
+
+---
 
 ## 15. Future Expansion
-- **LLM Integration:** Generate descriptive bullet points for featured courses.
-- **Multi-user Support:** Migration from `localStorage` to full Auth-based DB storage.
-- **Advanced Skills Mapping:** More granular skills derived from course syllabus data.
+- **Automated Parser:** HUJI PDF Transcript upload.
+- **LLM Integration:** Bullet point generation for resume skills.
+- **Multi-user Support:** Migration to full Auth-based DB storage.
+
+---
 
 ## 16. Open Questions / Needs Decision
-- Should "Shared" courses split credits or count fully for both?
-- Is there a need for "Year/Semester" filtering in the dashboard?
+- Detailed mapping for "Shared" courses (double-counting vs. splitting).
+- Default English translations for all Hebrew course names.
 
-STATUS: READY FOR APPROVAL
+**STATUS: READY FOR APPROVAL**
