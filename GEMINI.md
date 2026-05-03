@@ -49,6 +49,8 @@ Do not implement Prisma, SQLite, PostgreSQL, authentication, server persistence,
 - Keep business logic separate from UI components.
 - New features must map to a specific section in `docs/PRD.md`.
 - If a requirement is missing or ambiguous, stop and mark it as **NEEDS PRD DECISION**.
+- Do not modify `docs/PRD.md` unless the user explicitly requests a PRD update.
+- Do not run large refactors, migrations, package installs, or architecture changes unless explicitly requested.
 
 ## 8. Testing Checklist
 Before considering work complete, verify:
@@ -60,5 +62,12 @@ Before considering work complete, verify:
 - Starring more than 5 courses is blocked.
 - `localStorage` survives refresh.
 - RTL/LTR separation is preserved between modules.
+
+## 9. Completion Report
+At the end of each task, report:
+- Files changed
+- What was implemented
+- What was not changed
+- Any **NEEDS PRD DECISION** items
 
 STATUS: OPERATIONAL
