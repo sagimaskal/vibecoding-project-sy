@@ -248,7 +248,7 @@ export default function DashboardPage() {
                         <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold w-fit ${
                           course.major === 'Economics' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'
                         }`}>
-                          {course.major === 'Economics' ? 'כלכלה' : 'מנע&quot;ס'}
+                          {course.major === 'Economics' ? 'כלכלה' : 'מנהל עסקים'}
                         </span>
                         <span className="text-[10px] text-zinc-400 font-medium mr-1">
                           {course.major === 'Economics' 
