@@ -225,30 +225,40 @@ export default function DashboardPage() {
             <table className="w-full text-right border-collapse">
               <thead className="bg-zinc-50 text-zinc-500 text-xs font-bold uppercase tracking-wider">
                 <tr>
-                  <th className="px-8 py-4 text-right">שם הקורס</th>
+                  <th className="px-8 py-4 text-right">שנה/סמסטר</th>
+                  <th className="px-4 py-4 text-right">שם הקורס</th>
                   <th className="px-4 py-4 text-right">מספר</th>
                   <th className="px-4 py-4 text-right">נ&quot;ז</th>
-                  <th className="px-4 py-4 text-right">חוג</th>
-                  <th className="px-4 py-4 text-right">קטגוריה</th>
+                  <th className="px-4 py-4 text-right">חוג/קטגוריה</th>
+                  <th className="px-4 py-4 text-right">ציון</th>
                   <th className="px-4 py-4 text-center">פעולות</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100">
                 {filteredCourses.length > 0 ? filteredCourses.map(course => (
                   <tr key={course.id} className="hover:bg-zinc-50 transition-colors">
-                    <td className="px-8 py-5 font-bold text-zinc-800">{course.name}</td>
+                    <td className="px-8 py-5 text-sm font-medium text-zinc-500">
+                      {course.year} - סמסטר {course.semester}
+                    </td>
+                    <td className="px-4 py-5 font-bold text-zinc-800">{course.name}</td>
                     <td className="px-4 py-5 text-sm text-zinc-500 font-mono">{course.number}</td>
                     <td className="px-4 py-5 text-sm font-bold">{course.credits}</td>
                     <td className="px-4 py-5 text-right">
-                      <span className={`px-2 py-1 rounded-md text-[10px] font-bold inline-block ${
-                        course.major === 'Economics' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'
-                      }`}>
-                        {course.major === 'Economics' ? 'כלכלה' : 'מנהל עסקים'}                      </span>
+                      <div className="flex flex-col gap-1">
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold w-fit ${
+                          course.major === 'Economics' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'
+                        }`}>
+                          {course.major === 'Economics' ? 'כלכלה' : 'מנע&quot;ס'}
+                        </span>
+                        <span className="text-[10px] text-zinc-400 font-medium mr-1">
+                          {course.major === 'Economics' 
+                            ? ECONOMICS_REQUIREMENTS.categories.find(cat => cat.key === course.category)?.name 
+                            : BUSINESS_REQUIREMENTS.categories.find(cat => cat.key === course.category)?.name}
+                        </span>
+                      </div>
                     </td>
-                    <td className="px-4 py-5 text-sm text-zinc-600 text-right">
-                      {course.major === 'Economics' 
-                        ? ECONOMICS_REQUIREMENTS.categories.find(cat => cat.key === course.category)?.name 
-                        : BUSINESS_REQUIREMENTS.categories.find(cat => cat.key === course.category)?.name}
+                    <td className="px-4 py-5 text-right font-mono font-bold text-zinc-700">
+                      {course.grade !== undefined ? course.grade : '-'}
                     </td>
                     <td className="px-4 py-5">
                       <div className="flex items-center gap-2 justify-center">
@@ -278,7 +288,7 @@ export default function DashboardPage() {
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan={6} className="px-8 py-10 text-center text-zinc-400 font-medium">
+                    <td colSpan={7} className="px-8 py-10 text-center text-zinc-400 font-medium">
                       {searchTerm ? 'לא נמצאו קורסים התואמים את החיפוש' : 'טרם הוזנו קורסים למערכת'}
                     </td>
                   </tr>
@@ -420,6 +430,9 @@ function AddCourseModal({ onClose, onAdd, editData }: AddCourseModalProps) {
   const [credits, setCredits] = useState(editData?.credits || 2);
   const [major, setMajor] = useState<Major>(editData?.major || "Economics");
   const [category, setCategory] = useState(editData?.category || "Mandatory");
+  const [year, setYear] = useState(editData?.year || "א");
+  const [semester, setSemester] = useState<Course['semester']>(editData?.semester || "א");
+  const [grade, setGrade] = useState<string>(editData?.grade?.toString() || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -428,7 +441,10 @@ function AddCourseModal({ onClose, onAdd, editData }: AddCourseModalProps) {
       number,
       credits: Number(credits),
       major,
-      category: category as EconomicsCategory | BusinessCategory
+      category: category as any,
+      year,
+      semester,
+      grade: grade ? Number(grade) : undefined
     });
   };
 
@@ -476,6 +492,45 @@ function AddCourseModal({ onClose, onAdd, editData }: AddCourseModalProps) {
                 className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all font-bold text-right"
                 value={credits}
                 onChange={(e) => setCredits(Number(e.target.value))}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-zinc-700 mb-1 text-right">שנת לימוד</label>
+              <select 
+                className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm text-right"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+              >
+                <option value="א">שנה א</option>
+                <option value="ב">שנה ב</option>
+                <option value="ג">שנה ג</option>
+                <option value="ד">שנה ד+</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-zinc-700 mb-1 text-right">סמסטר</label>
+              <select 
+                className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm text-right"
+                value={semester}
+                onChange={(e) => setSemester(e.target.value as any)}
+              >
+                <option value="א">סמסטר א</option>
+                <option value="ב">סמסטר ב</option>
+                <option value="קיץ">סמסטר קיץ</option>
+              </select>
+            </div>
+
+            <div className="col-span-2">
+              <label className="block text-sm font-bold text-zinc-700 mb-1 text-right">ציון (אופציונלי)</label>
+              <input 
+                type="number" 
+                className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all font-bold text-right"
+                value={grade}
+                onChange={(e) => setGrade(e.target.value)}
+                placeholder="הכנס ציון..."
+                min="0"
+                max="100"
               />
             </div>
           </div>
