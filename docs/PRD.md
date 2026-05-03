@@ -1,148 +1,153 @@
-# Product Requirements Document: HUJI Degree Tracker
+# Product Requirements Document: HUJI Degree Tracker (Technical Specification)
 
-## 1. Overview
-### What the system is
-The **HUJI Degree Tracker** is a professional web-based academic management portal designed for students at the Hebrew University of Jerusalem. It enables students to manage their course history, track credit (N.Z) progress in real-time, and validate their standing against specific degree requirements.
-
-### Who it is for
-Initially, the system is strictly tailored for dual-degree students in **Economics (כלכלה)** and **Business Administration (מנהל עסקים)**.
-
-### What problem it solves
-Dual-degree students often struggle with fragmented university systems and complex, department-specific rules. Tracking requirements across two different faculties using manual spreadsheets is error-prone and stressful.
-
-### Why it matters
-Incorrect credit tracking can lead to delayed graduation or missed prerequisites. This system provides a "Fintech-grade" dashboard that gives students clarity, confidence, and control over their academic journey.
+## 1. Document Control
+- **Version**: 1.1
+- **Status**: DRAFT - UPDATED, REQUIRES APPROVAL
+- **Role**: Single Source of Truth (SSOT)
+- **Rules**: 
+  - Any change to this document requires explicit approval from the lead developer and product owner.
+  - Updates must be versioned sequentially.
+  - Conflicts between code and this document are resolved in favor of this document.
 
 ---
 
-## 2. Core Value Proposition
-- **Automated Validation**: Instant calculation of completed vs. remaining credits based on exact HUJI departmental rules.
-- **Visual Clarity**: High-end progress bars and category breakdowns that turn raw data into actionable insights.
-- **RTL Native**: Built from the ground up for Hebrew speakers with a modern, responsive interface.
-- **Persistence**: Data is saved automatically, ensuring the student's personal area is always up to date.
+## 2. Overview & System Purpose
+### Problem Statement
+Dual-degree students at the Hebrew University face fragmented data across university portals (Mina/HUJI-Net) and static PDF requirement sheets. Manual tracking leads to errors in credit attribution and graduation delays.
+
+### Solution
+A centralized, RTL-native portal that applies a deterministic rules engine to user-provided course data to validate degree progress for Economics and Business Administration combinations.
 
 ---
 
-## 3. User Flow
-1.  **Entry**: User arrives at a modern Landing Page explaining the product.
-2.  **Onboarding**: User logs in with a Name and Email (capturing identity).
-3.  **Setup**: User selects their degree combination.
-    - If "Economics + Business": Proceed to Portal.
-    - If any other combination: Show "Unsupported" message.
-4.  **Portal Access**: User enters the Personal Area with a persistent sidebar.
-5.  **Navigation**: User toggles between "Stats" (Overview), "Courses" (Management), and "About" (Information).
+## 3. Functional Requirements & Enforceable Logic
+
+### 3.1 Course Management Logic
+| Feature | Rule | Validation / Constraint | Failure Scenario |
+| :--- | :--- | :--- | :--- |
+| **Course Identity** | `Course Number` is the unique identifier. | Must be numeric string. | Different names for same number are blocked. |
+| **Duplication** | No two courses can share the same `Course Number`. | System-wide unique constraint per user. | Alert: `"קורס זה כבר הוזן למערכת ולא ניתן לספור אותו פעמיים"` |
+| **Attribution** | 1 Course = 1 Major + 1 Category. | Selection restricted to active major categories. | No "unassigned" courses allowed in calculations. |
+| **Credit Units** | Credits must be in increments of 1 or 0.5. | `Number > 0`, `Max 20`. | Input rejected if non-numeric or <= 0. |
+| **Grade Handling** | Grades are optional (0-100). | `0 <= Grade <= 100` OR `null`. | Input rejected if outside range. |
+
+### 3.2 Academic Rules Engine (Economics + Business)
+#### Credits Attribution Engine
+1.  **Selection-Based Routing**: A course is attributed to a major based on the `Major` field and a specific `Category` field.
+2.  **No Double Counting**: The engine sums credits grouped by `(Major, Category)`. A single course ID can only appear in one group sum.
+3.  **Overflow Behavior**: 
+    - If `CurrentCategoryCredits > RequiredCategoryCredits`, the category progress bar shows 100%.
+    - The excess credits contribute to the **Major Total** but are flagged with a "Core/Elective Overflow" visual indicator.
+4.  **Major Totals**:
+    - **Economics Total**: Sum of all categories. Target: 64 N.Z.
+    - **Business Total**: Sum of all categories. Target: 60 N.Z.
+
+#### Exact Degree Constants
+- **Economics (Target 64)**: 
+  - Mandatory: 40 | Core: 8 | Elective: 8 | Research: 4 | Avnei Pina: 4.
+- **Business (Target 60)**:
+  - Mandatory: 27 | Elective: 17 | Mandatory Elective: 8 | Research: 4 | Avnei Pina: 4.
 
 ---
 
-## 4. System Structure (Pages)
-### Landing Page
-- **Purpose**: Conversion and education.
-- **Components**: Hero section, features grid, "Enter System" CTA.
-- **User Actions**: Click to login.
+## 4. Data Model (Production Ready)
 
-### Login Page
-- **Purpose**: Identity capture.
-- **Components**: Name/Email input fields.
-- **User Actions**: Submit form to save identity to local storage.
+### 4.1 Entities
+**User**
+- `id`: UUID (Primary Key)
+- `name`: String (Non-nullable)
+- `email`: String (Unique, Non-nullable)
+- `majors`: Enum Array `[Economics, Business]` (Non-nullable)
 
-### Degree Selection Page
-- **Purpose**: Configuration.
-- **Components**: Major selection cards/dropdowns.
-- **User Actions**: Choose two majors; proceed if valid.
+**Course**
+- `id`: UUID (Primary Key)
+- `userId`: UUID (Foreign Key -> User.id)
+- `name`: String (Max 100 chars)
+- `number`: String (Unique per `userId`)
+- `credits`: Float (Min 0.5, Max 20)
+- `year`: Enum `[א, ב, ג, ד+]`
+- `semester`: Enum `[א, ב, קיץ]`
+- `major`: Enum `[Economics, Business]`
+- `category`: Enum (Specific to Major)
+- `grade`: Integer (Range 0-100, Optional)
 
-### Personal Dashboard (Stats)
-- **Purpose**: High-level progress tracking.
-- **Components**: Two major-specific cards with progress bars and category lists (Mandatory, Elective, etc.).
-- **User Actions**: View stats; read system alerts.
-
-### Course List Page
-- **Purpose**: Data management.
-- **Components**: "Add Course" button, Search bar, Course Table (showing Year, Semester, Name, Number, Credits, Major, Category, and Grade).
-- **User Actions**: Add, Edit, or Delete courses.
-
-### About / System Rules Page
-- **Purpose**: Documentation.
-- **Components**: System scope explanation, usage guide, manual entry rules.
-- **User Actions**: Reference rules for credit attribution.
+### 4.2 Constraints
+- **Uniqueness**: `(userId, number)` must be unique.
+- **Integrity**: `category` must exist within the `major` requirement map.
 
 ---
 
-## 5. Functional Requirements
-### User Identity
-- System must capture and display the student's name in the personal area.
-- **NEEDS DECISION**: Transition from local-only storage to server-side authentication (Auth0/Firebase).
+## 5. System State & Persistence
 
-### Course Management
-- Users can add courses with: Name, Number (Unique ID), Credits, Year, Semester, Major, Category, and Grade (Optional).
-- System must prevent duplicate entries based on the **Course Number**.
-- Users can edit any field of an existing course.
-- Users can delete courses with immediate stat recalculation.
+### 5.1 Local Storage Strategy (Current)
+- **Key**: `huji_degree_courses` (JSON Stringified Array of Courses).
+- **Key**: `huji_user_name` (String).
+- **Sync**: Writes occur on every state change (Debounced 300ms).
+- **Refresh Behavior**: State hydrated from `localStorage` on `ComponentDidMount`.
 
-### Credit Tracking (N.Z)
-- **Economics Rules**: Total 64 (Mandatory 40, Core 8, Electives 8, Research 4, Avnei Pina 4).
-- **Business Rules**: Total 60 (Mandatory 27, Electives 17, Mandatory Electives 8, Research 4, Avnei Pina 4).
-- **Recalculation**: Stats must update instantly upon any data change.
-
-### Logic Constraints
-- **Strict Attribution**: A course belongs to exactly ONE major and ONE category. No double-counting is allowed at this stage.
-- **Avnei Pina**: Treated as a distinct category under the major it is assigned to.
+### 5.2 Transition to Backend (PostgreSQL)
+- **NEEDS DECISION**: Define API endpoints for `POST /courses` and `GET /stats`.
+- **Consistency Risk**: Multiple devices (Mobile/Desktop) will cause `localStorage` drift. Sync strategy needed (Timestamp-based "Last Write Wins").
 
 ---
 
-## 6. Data Model (High Level)
-### User
-- Name (String)
-- Email (String)
-- Selected Majors (Array of Strings)
+## 6. Component Specification
 
-### Course
-- ID (UUID)
-- Name (String)
-- Number (String/Unique)
-- Credits (Number)
-- Year (String: A/B/C/D+)
-- Semester (Enum: A/B/Summer)
-- Major (Enum: Economics/Business)
-- Category (Enum based on Major)
-- Grade (Number/Optional)
+### 6.1 Course Table Component
+- **Header**: Year/Sem, Name, ID, Credits, Major/Cat, Grade, Actions.
+- **Row States**:
+  - `Default`: Display mode.
+  - `Editing`: Inline inputs or Modal popup.
+  - `Deleting`: Transition opacity to 50% before removal.
+- **Empty State**: Show "📂 טרם הוזנו קורסים למערכת" with a large "Add Course" CTA.
 
-### Degree Requirement
-- Major Name
-- Total Credits Required
-- Category Map (Name -> Required Credits)
+### 6.2 Add/Edit Modal
+- **Validation Trigger**: `OnSubmit`.
+- **Inputs**: 
+  - Name: Text.
+  - Number: Numeric Text.
+  - Credits: Select/Number.
+  - Major: Toggle `Economics | Business`.
+  - Category: Dynamic dropdown based on Major selection.
+  - Grade: Optional number.
 
 ---
 
-## 7. UX / UI Guidelines
-- **Direction**: Right-to-Left (RTL) across all views.
-- **Style**: "Fintech-Modern" - clean white/zinc backgrounds, subtle shadows, large typography.
-- **Hierarchy**: Most important data (Total Progress %) must be largest.
-- **Feedback**: Immediate visual cues for success (adding) or error (duplicates).
-- **Accessibility**: High contrast text; responsive layout for mobile use during registration periods.
+## 7. UX Behavior & Feedback
+
+| Action | Success Feedback | Error Feedback | Loading State |
+| :--- | :--- | :--- | :--- |
+| **Add Course** | Row animates in (fade-in); Progress bars update instantly. | Alert box for duplicates. | None (Local-only). |
+| **Update Major** | All stats re-calculate; Orphaned courses flagged red. | "Combination not supported" block. | 200ms blur overlay. |
+| **Reset Data** | Confirm dialog -> Empty state animation. | None. | 300ms spinner. |
+| **Edit Grade** | Visual "Saved" checkmark near field. | Red border if > 100. | Inline indicator. |
 
 ---
 
-## 8. Constraints & Rules
-- **Scope**: Support is limited to Economics and Business Administration only.
-- **Validation**: System must show an alert: `"קורס זה כבר הוזן למערכת ולא ניתן לספור אותו פעמיים"` if a duplicate number is detected.
-- **Storage**: Currently relies on `localStorage`. 
-- **NEEDS DECISION**: Database schema for PostgreSQL/SQLite integration.
+## 8. User Scenarios
+
+### Scenario 1: Freshman (The "Clean Slate")
+- **Action**: User enters for the first time.
+- **Behavior**: Home -> Login -> Setup (Econ+Biz).
+- **Result**: Portal is empty. Stats show "0/124 N.Z". User adds "Microeconomics" (4 N.Z, Mandatory). Progress bar for Econ-Mandatory moves to 10%.
+
+### Scenario 2: Senior (Near Graduation)
+- **Action**: User has 120 N.Z entered. Realizes they assigned "Statistics" to Business but it's needed in Economics.
+- **Behavior**: User clicks "Edit" on Statistics. Changes Major to "Economics". 
+- **Result**: Business total drops by 4. Economics total increases. System flags "Mandatory Business" as incomplete (Red).
+
+### Scenario 3: Data Correction (The Duplicate)
+- **Action**: User forgets they entered "Macroeconomics" (57102) and tries to add it again under a different name "Intro to Macro".
+- **Behavior**: User hits "Save".
+- **Result**: System blocks save. Alert: `"קורס זה כבר הוזן..."`. Fields remain populated for user to correct the number or cancel.
 
 ---
 
-## 9. Future Expansion
-- **Database Integration**: Migrate from browser storage to a permanent cloud database.
-- **Major Support**: Expand logic to include Accounting, Computer Science, and Law.
-- **Automation**: Feature to upload PDF transcripts for automatic course parsing.
-- **GPA Calculation**: Automated weighted GPA based on entered grades.
+## 9. Future Expansion (Roadmap)
+1. **Automated Parser**: Integration with HUJI PDF Transcript upload.
+2. **Additional Majors**: Logic maps for CS, Law, Psychology.
+3. **Multi-User Sync**: Move `localStorage` to Prisma/PostgreSQL.
 
 ---
 
-## 10. Open Questions / Needs Decision
-1.  **Authentication**: When should we implement a real secure login (Passwords/SSO)?
-2.  **Shared Courses**: Will we support the "Shared Course" logic (where one course counts for both majors) in the next version?
-3.  **Avnei Pina Limits**: Should the system flag if a student enters more than the required 4 N.Z of Avnei Pina?
-
----
-
-**STATUS: DRAFT - Pending Approval**
+**STATUS: DRAFT - UPDATED, REQUIRES APPROVAL**
