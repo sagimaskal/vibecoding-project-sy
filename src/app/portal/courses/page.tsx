@@ -3,170 +3,193 @@
 import { useState, useMemo } from "react";
 import { useCourses } from "@/components/CourseContext";
 import { AddCourseModal } from "@/components/AddCourseModal";
-import { ECONOMICS_REQUIREMENTS, BUSINESS_REQUIREMENTS, Course } from "@/lib/types";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { 
+  Plus, 
+  Search, 
+  Filter, 
+  Trash2, 
+  Edit2, 
+  Star, 
+  BookOpen, 
+  ExternalLink,
+  MoreVertical,
+  ChevronDown
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function CoursesPage() {
-  const { courses, addCourse, updateCourse, deleteCourse, isLoaded } = useCourses();
-  const [isAddingCourse, setIsAddingCourse] = useState(false);
-  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const { courses, deleteCourse, toggleStar } = useCourses();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCourse, setEditingCourse] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredCourses = useMemo(() => {
     return courses.filter(c => 
-      c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      c.number.includes(searchTerm)
-    );
+      c.name.includes(searchTerm) || c.number.includes(searchTerm)
+    ).sort((a, b) => b.year.localeCompare(a.year));
   }, [courses, searchTerm]);
 
-  const handleAddOrEdit = (courseData: Omit<Course, 'id'>) => {
-    let success = false;
-    if (editingCourse) {
-      success = updateCourse({ ...courseData, id: editingCourse.id });
-    } else {
-      success = addCourse(courseData);
-    }
-
-    if (success) {
-      setIsAddingCourse(false);
-      setEditingCourse(null);
-    }
+  const handleEdit = (course: any) => {
+    setEditingCourse(course);
+    setIsModalOpen(true);
   };
 
-  if (!isLoaded) return null;
+  const handleAdd = () => {
+    setEditingCourse(null);
+    setIsModalOpen(true);
+  };
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-        <div>
-           <h1 className="text-4xl font-black tracking-tight text-zinc-900 mb-4">רשימת קורסים</h1>
-           <p className="text-lg text-zinc-500 font-medium">ניהול, עריכה והוספת קורסים לתואר</p>
+    <div className="space-y-8">
+      <PageHeader 
+        title="רשימת קורסים" 
+        description="נהלו את הקורסים שביצעתם או שתבצעו במהלך התואר."
+      >
+        <Button onClick={handleAdd} className="rounded-2xl h-12 gap-2 px-6 shadow-xl shadow-blue-100">
+          <Plus size={20} />
+          הוספת קורס חדש
+        </Button>
+      </PageHeader>
+
+      {/* Filters and Search */}
+      <div className="flex flex-col md:flex-row gap-4 items-center">
+        <div className="relative flex-1 w-full">
+          <Search size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+          <input
+            type="text"
+            placeholder="חיפוש לפי שם קורס או מספר..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-white border border-zinc-200 rounded-2xl py-3.5 pr-12 pl-6 font-bold text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-600 transition-all placeholder:text-zinc-300"
+          />
         </div>
-        <button 
-          onClick={() => {
-            setEditingCourse(null);
-            setIsAddingCourse(true);
-          }}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-black transition-all shadow-xl shadow-blue-100 flex items-center justify-center gap-3 active:scale-95 text-lg"
-        >
-          <span className="text-2xl leading-none">+</span>
-          הוספת קורס
-        </button>
+        <Button variant="outline" className="rounded-2xl h-12 gap-2 px-6 w-full md:w-auto">
+          <Filter size={18} />
+          סינון
+        </Button>
       </div>
 
-      <div className="bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm overflow-hidden">
-        <div className="px-8 py-8 border-b border-zinc-50 flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-zinc-50/30">
-          <div className="flex items-center gap-4">
-            <div className="bg-zinc-900 text-white px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
-              {courses.length} קורסים הוזנו
+      <div className="space-y-4">
+        <AnimatePresence mode="popLayout">
+          {filteredCourses.length > 0 ? (
+            <div className="grid gap-4">
+              {filteredCourses.map((course) => (
+                <motion.div
+                  key={course.id}
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Card className="group border-none shadow-sm hover:shadow-xl hover:shadow-zinc-200/50 ring-1 ring-zinc-100/50 transition-all duration-300 overflow-hidden">
+                    <div className="p-1 flex flex-col md:flex-row md:items-center">
+                      {/* Left color bar based on major */}
+                      <div className={cn(
+                        "w-full md:w-1.5 h-1.5 md:h-20 rounded-full my-auto md:ml-6",
+                        course.major === 'Economics' ? "bg-blue-600" : "bg-emerald-500"
+                      )} />
+                      
+                      <div className="p-6 md:p-0 flex-1 grid md:grid-cols-[1fr_auto_auto_auto_auto] items-center gap-8">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest leading-none">
+                              {course.number}
+                            </span>
+                            <span className={cn(
+                              "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded leading-none",
+                              course.major === 'Economics' ? "bg-blue-50 text-blue-600" : "bg-emerald-50 text-emerald-600"
+                            )}>
+                              {course.major === 'Economics' ? "כלכלה" : "מנהל עסקים"}
+                            </span>
+                          </div>
+                          <h4 className="text-lg font-black text-zinc-900 group-hover:text-blue-600 transition-colors">
+                            {course.name}
+                          </h4>
+                        </div>
+
+                        <div className="flex flex-col md:items-center">
+                          <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest mb-1">שנה/סמסטר</span>
+                          <span className="font-black text-zinc-700 text-sm">שנה {course.year} ׳ {course.semester}</span>
+                        </div>
+
+                        <div className="flex flex-col md:items-center">
+                          <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest mb-1">נ"ז</span>
+                          <span className="font-black text-zinc-700 text-sm">{course.credits}</span>
+                        </div>
+
+                        <div className="flex flex-col md:items-center">
+                          <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest mb-1">ציון</span>
+                          <span className={cn(
+                            "font-black text-sm",
+                            course.grade ? "text-zinc-900" : "text-zinc-300"
+                          )}>
+                            {course.grade || "--"}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 justify-end">
+                          <button
+                            onClick={() => toggleStar(course.id)}
+                            className={cn(
+                              "p-3 rounded-xl transition-all",
+                              course.starred 
+                                ? "bg-amber-50 text-amber-500 shadow-sm" 
+                                : "text-zinc-300 hover:text-amber-400 hover:bg-amber-50/30"
+                            )}
+                          >
+                            <Star size={18} fill={course.starred ? "currentColor" : "none"} />
+                          </button>
+                          <button
+                            onClick={() => handleEdit(course)}
+                            className="p-3 rounded-xl text-zinc-300 hover:text-blue-600 hover:bg-blue-50 transition-all"
+                          >
+                            <Edit2 size={18} />
+                          </button>
+                          <button
+                            onClick={() => deleteCourse(course.id)}
+                            className="p-3 rounded-xl text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
             </div>
-          </div>
-          <div className="relative w-full sm:w-80">
-            <input 
-              type="text"
-              placeholder="חיפוש קורס..."
-              className="w-full pl-4 pr-12 py-3.5 rounded-2xl border border-zinc-200 bg-white text-sm font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all shadow-sm"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <span className="absolute right-4 top-3.5 text-xl">🔍</span>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-right border-collapse">
-            <thead>
-              <tr className="bg-zinc-50/50 text-zinc-400 text-xs font-black uppercase tracking-[0.1em]">
-                <th className="px-8 py-5 text-right font-black">שנה/סמסטר</th>
-                <th className="px-4 py-5 text-right font-black">שם הקורס</th>
-                <th className="px-4 py-5 text-right font-black">מספר</th>
-                <th className="px-4 py-5 text-right font-black">נ&quot;ז</th>
-                <th className="px-4 py-5 text-right font-black">חוג/קטגוריה</th>
-                <th className="px-4 py-5 text-right font-black">ציון</th>
-                <th className="px-8 py-5 text-center font-black">פעולות</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-50">
-              {filteredCourses.length > 0 ? filteredCourses.map(course => (
-                <tr key={course.id} className="group hover:bg-zinc-50/80 transition-all duration-300">
-                  <td className="px-8 py-6">
-                    <span className="text-sm font-black text-zinc-400 group-hover:text-zinc-600 transition-colors">
-                      שנה {course.year} · סמסטר {course.semester}
-                    </span>
-                  </td>
-                  <td className="px-4 py-6 font-black text-zinc-800 text-lg leading-tight">{course.name}</td>
-                  <td className="px-4 py-6 text-sm text-zinc-400 font-mono font-bold">{course.number}</td>
-                  <td className="px-4 py-6">
-                    <div className="flex items-center gap-2">
-                       <span className="text-lg font-black text-zinc-900">{course.credits}</span>
-                       <span className="text-[10px] font-black text-zinc-300 uppercase tracking-tighter">נ&quot;ז</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-6">
-                    <div className="flex flex-col gap-1.5">
-                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black w-fit uppercase tracking-wider ${
-                        course.major === 'Economics' ? 'bg-blue-50 text-blue-600' : 'bg-emerald-50 text-emerald-600'
-                      }`}>
-                        {course.major === 'Economics' ? 'כלכלה' : 'מנהל עסקים'}
-                      </span>
-                      <span className="text-[11px] text-zinc-400 font-black pr-1">
-                        {course.major === 'Economics' 
-                          ? ECONOMICS_REQUIREMENTS.categories.find(cat => cat.key === course.category)?.name 
-                          : BUSINESS_REQUIREMENTS.categories.find(cat => cat.key === course.category)?.name}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-6">
-                    <div className={`text-lg font-black font-mono ${course.grade && course.grade >= 60 ? 'text-zinc-900' : 'text-zinc-300'}`}>
-                      {course.grade !== undefined ? course.grade : '--'}
-                    </div>
-                  </td>
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-2 justify-center opacity-40 group-hover:opacity-100 transition-opacity">
-                      <button 
-                        onClick={() => {
-                          setEditingCourse(course);
-                          setIsAddingCourse(true);
-                        }}
-                        className="w-10 h-10 flex items-center justify-center bg-white text-blue-600 border border-zinc-100 rounded-xl hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm active:scale-90"
-                        title="עריכה"
-                      >
-                        <span className="text-lg">✏️</span>
-                      </button>
-                      <button 
-                        onClick={() => deleteCourse(course.id)}
-                        className="w-10 h-10 flex items-center justify-center bg-white text-red-500 border border-zinc-100 rounded-xl hover:bg-red-500 hover:text-white hover:border-red-500 transition-all shadow-sm active:scale-90"
-                        title="מחיקה"
-                      >
-                        <span className="text-lg">🗑️</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              )) : (
-                <tr>
-                  <td colSpan={7} className="px-8 py-24 text-center">
-                    <div className="flex flex-col items-center gap-4">
-                       <span className="text-5xl opacity-20">📂</span>
-                       <p className="text-xl font-black text-zinc-300">
-                         {searchTerm ? 'לא נמצאו קורסים התואמים את החיפוש' : 'טרם הוזנו קורסים למערכת'}
-                       </p>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="py-32 flex flex-col items-center text-center space-y-6"
+            >
+              <div className="w-24 h-24 rounded-[2.5rem] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-200">
+                <BookOpen size={48} />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-2xl font-black text-zinc-900">טרם נוספו קורסים</h3>
+                <p className="text-zinc-500 font-medium">הוסיפו את הקורס הראשון שלכם כדי להתחיל לעקוב אחרי התואר.</p>
+              </div>
+              <Button onClick={handleAdd} className="rounded-2xl h-12 gap-2 px-8">
+                <Plus size={20} />
+                הוספת קורס ראשון
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {isAddingCourse && (
-        <AddCourseModal 
-          onClose={() => {
-            setIsAddingCourse(false);
-            setEditingCourse(null);
-          }} 
-          onAdd={handleAddOrEdit}
-          editData={editingCourse || undefined}
+      {isModalOpen && (
+        <AddCourseModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          editingCourse={editingCourse}
         />
       )}
     </div>

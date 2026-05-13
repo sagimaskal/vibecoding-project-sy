@@ -3,67 +3,87 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCourses } from "./CourseContext";
+import { 
+  LayoutDashboard, 
+  BookOpen, 
+  FileText, 
+  Info, 
+  LogOut, 
+  RefreshCcw,
+  GraduationCap
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "./ui/Button";
 
 export function Sidebar() {
   const pathname = usePathname();
   const { userName, resetData } = useCourses();
 
   const navItems = [
-    { name: "מעקב נ״ז", href: "/portal/stats", icon: "📊" },
-    { name: "רשימת קורסים", href: "/portal/courses", icon: "📚" },
-    { name: "על המערכת", href: "/portal/about", icon: "ℹ️" },
+    { name: "מבט על", href: "/portal/stats", icon: LayoutDashboard },
+    { name: "רשימת קורסים", href: "/portal/courses", icon: BookOpen },
+    { name: "בונה קורות חיים", href: "/portal/resume", icon: FileText },
+    { name: "על המערכת", href: "/portal/about", icon: Info },
   ];
 
   return (
-    <aside className="w-64 bg-white border-l border-zinc-200 flex flex-col h-screen sticky top-0">
-      <div className="p-6 border-b border-zinc-100">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-100">
-            H
+    <aside className="w-72 bg-white border-l border-zinc-200 flex flex-col h-screen sticky top-0 z-40">
+      <div className="p-8">
+        <Link href="/portal/stats" className="flex items-center gap-3 mb-10 group">
+          <div className="w-11 h-11 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-100 group-hover:scale-110 transition-transform">
+            <GraduationCap size={24} />
           </div>
-          <span className="font-bold text-zinc-900 tracking-tight">HUJI Portal</span>
-        </div>
-        
-        <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-100">
-          <p className="text-xs text-zinc-400 font-bold uppercase tracking-wider mb-1">סטודנט/ית</p>
-          <p className="font-bold text-zinc-800 truncate">{userName || "אורח/ת"}</p>
+          <div className="flex flex-col">
+            <span className="font-black text-zinc-900 tracking-tight text-lg leading-none">HUJI</span>
+            <span className="font-bold text-zinc-400 text-xs uppercase tracking-widest mt-1">Tracker</span>
+          </div>
+        </Link>
+
+        <div className="bg-zinc-50 rounded-2xl p-5 border border-zinc-100/50">
+          <p className="text-[10px] text-zinc-400 font-black uppercase tracking-[0.2em] mb-2">סטודנט/ית</p>    
+          <p className="font-black text-zinc-800 truncate text-sm">{userName || "אורח/ת"}</p>
         </div>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1 mt-4">
+      <nav className="flex-1 px-4 space-y-2 mt-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
+          const Icon = item.icon;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+              className={cn(
+                "flex items-center gap-3 px-5 py-3.5 rounded-2xl text-sm font-bold transition-all group",
                 isActive
-                  ? "bg-blue-50 text-blue-600 shadow-sm"
+                  ? "bg-blue-600 text-white shadow-xl shadow-blue-100"
                   : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
-              }`}
+              )}
             >
-              <span className="text-lg">{item.icon}</span>
+              <Icon size={18} className={cn(isActive ? "text-white" : "text-zinc-400 group-hover:text-zinc-900")} />
               {item.name}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-zinc-100">
-        <button
+      <div className="p-6 space-y-2">
+        <Button
+          variant="ghost"
           onClick={resetData}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all"
+          className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-50 px-5"
         >
-          <span>🗑️</span>
+          <RefreshCcw size={16} />
           איפוס נתונים
-        </button>
-        <Link
-          href="/"
-          className="w-full flex items-center gap-3 px-4 py-3 mt-1 rounded-xl text-sm font-bold text-zinc-500 hover:bg-zinc-50 transition-all"
-        >
-          <span>🚪</span>
-          יציאה
+        </Button>
+        <Link href="/">
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-3 text-zinc-400 hover:text-zinc-900 px-5"
+          >
+            <LogOut size={16} />
+            יציאה
+          </Button>
         </Link>
       </div>
     </aside>

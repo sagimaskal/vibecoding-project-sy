@@ -2,72 +2,92 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useCourses } from "@/components/CourseContext";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { GraduationCap, ArrowRight, User, Mail } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const router = useRouter();
+  const { setUserName, setUserEmail } = useCourses();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (typeof window !== "undefined") {
-      localStorage.setItem("huji_user_name", name);
+    if (name && email) {
+      setUserName(name);
+      setUserEmail(email);
+      router.push("/setup");
     }
-    router.push("/setup");
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-md animate-in fade-in zoom-in duration-500">
-        <div className="text-center mb-10">
-          <Link href="/" className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white mb-6 shadow-xl shadow-blue-200">
-            <span className="text-3xl font-black">H</span>
-          </Link>
-          <h1 className="text-3xl font-black tracking-tight text-zinc-900">כניסה לאזור האישי</h1>
-          <p className="mt-3 text-zinc-500 font-medium">הזינו את הפרטים כדי להתחיל במעקב</p>
+    <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-6" dir="rtl">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="w-full max-w-md"
+      >
+        <div className="flex flex-col items-center mb-10 space-y-4">
+          <div className="w-16 h-16 rounded-[2rem] bg-blue-600 flex items-center justify-center text-white shadow-2xl shadow-blue-200">
+            <GraduationCap size={32} />
+          </div>
+          <div className="text-center">
+            <h1 className="text-3xl font-black tracking-tight text-zinc-900">ברוכים הבאים</h1>
+            <p className="text-zinc-500 font-bold text-sm uppercase tracking-widest mt-1">HUJI Student Portal</p>
+          </div>
         </div>
 
-        <div className="bg-white p-10 rounded-[2.5rem] border border-zinc-100 shadow-2xl shadow-zinc-200/50">
-          <form className="space-y-6" onSubmit={handleLogin}>
-            <div>
-              <label htmlFor="name" className="block text-sm font-bold text-zinc-700 mb-2 mr-1">שם מלא</label>
-              <input
-                id="name"
-                type="text"
-                required
-                className="w-full px-5 py-4 rounded-2xl border border-zinc-100 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-medium"
-                placeholder="ישראל ישראלי"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-bold text-zinc-700 mb-2 mr-1">אימייל</label>
-              <input
-                id="email"
-                type="email"
-                required
-                className="w-full px-5 py-4 rounded-2xl border border-zinc-100 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-medium"
-                placeholder="israel@mail.huji.ac.il"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-100 active:scale-95"
-            >
-              המשך לאזור האישי
-            </button>
-          </form>
-        </div>
-
-        <p className="mt-8 text-center text-zinc-400 text-sm font-bold uppercase tracking-widest">
-           האוניברסיטה העברית בירושלים
+        <Card className="border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] rounded-[2.5rem] overflow-hidden">
+          <CardHeader className="p-10 pb-0">
+            <CardTitle className="text-2xl font-black text-zinc-900">הזדהות</CardTitle>
+            <CardDescription className="text-zinc-500 font-medium">כדי שנוכל לשמור את הנתונים שלך, נשמח להכיר.</CardDescription>
+          </CardHeader>
+          <CardContent className="p-10 pt-8">
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mr-1">שם מלא</label>
+                <div className="relative">
+                  <User size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+                  <input
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="ישראל ישראלי"
+                    className="w-full bg-zinc-50 border border-zinc-100 rounded-2xl px-12 py-4 font-bold text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all placeholder:text-zinc-300"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mr-1">כתובת אימייל</label>
+                <div className="relative">
+                  <Mail size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="israel@mail.huji.ac.il"
+                    className="w-full bg-zinc-50 border border-zinc-100 rounded-2xl px-12 py-4 font-bold text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all placeholder:text-zinc-300"
+                  />
+                </div>
+              </div>
+              <Button type="submit" size="lg" className="w-full rounded-2xl h-14 gap-3 text-lg mt-4 shadow-xl shadow-blue-100">
+                המשך להגדרה
+                <ArrowRight size={20} className="rotate-180" />
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+        
+        <p className="text-center mt-10 text-zinc-400 text-xs font-bold uppercase tracking-widest">
+          המידע נשמר על הדפדפן שלך בלבד &copy; 2026
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }

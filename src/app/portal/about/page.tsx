@@ -1,58 +1,85 @@
 "use client";
 
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Info, ShieldCheck, Mail, Code2, ExternalLink, HelpCircle } from "lucide-react";
+import { motion } from "framer-motion";
+
 export default function AboutPage() {
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="mb-12">
-         <h1 className="text-4xl font-black tracking-tight text-zinc-900 mb-4">על המערכת</h1>
-         <p className="text-lg text-zinc-500 font-medium">מידע, הנחיות וכללים לשימוש בפורטל הסטודנטים</p>
-      </div>
+    <div className="space-y-12 pb-20">
+      <PageHeader 
+        title="על המערכת" 
+        description="קצת רקע על הפרויקט ועל האופן שבו הוא שומר על הנתונים שלכם."
+      />
 
-      <div className="grid md:grid-cols-2 gap-8">
-         <div className="bg-white p-10 rounded-[2.5rem] border border-zinc-100 shadow-sm">
-            <h2 className="text-2xl font-black text-blue-600 mb-6 flex items-center gap-3">
-               <span>🎯</span>
-               מטרת המערכת
-            </h2>
-            <div className="space-y-4 text-zinc-600 font-medium leading-relaxed">
-               <p>המערכת נועדה לסייע לסטודנטים בניהול ובמעקב אחר התקדמותם האקדמית בצורה עצמאית ומדויקת.</p>
-               <p>גרסה זו תומכת באופן מלא בשילוב הדו-חוגי של <strong>כלכלה ומנהל עסקים</strong> באוניברסיטה העברית, בהתאם לדרישות הנ״ז המעודכנות לשנת 2026.</p>
+      <div className="grid lg:grid-cols-3 gap-8">
+        <Card className="lg:col-span-2 border-none shadow-xl shadow-zinc-200/50 rounded-[2.5rem] overflow-hidden">
+          <CardHeader className="p-10 bg-blue-600 text-white">
+            <CardTitle className="text-3xl font-black">HUJI Degree Tracker</CardTitle>
+            <p className="text-blue-100 font-bold opacity-80 uppercase tracking-widest text-xs mt-2">הגרסה המקצועית 2026</p>
+          </CardHeader>
+          <CardContent className="p-10 space-y-8 text-zinc-600 leading-relaxed font-medium">
+            <p className="text-xl text-zinc-900 font-black">
+              פרויקט זה נוצר במטרה להקל על סטודנטים לכלכלה ומנהל עסקים באוניברסיטה העברית בניהול מסלול הלימודים שלהם.
+            </p>
+            
+            <div className="space-y-4">
+              <h4 className="text-zinc-900 font-black text-lg flex items-center gap-3">
+                <HelpCircle size={20} className="text-blue-600" />
+                איך זה עובד?
+              </h4>
+              <p>
+                המערכת משתמשת במנוע חוקים דטרמיניסטי שמכיר את דרישות התואר המעודכנות של החוגים לכלכלה ומנהל עסקים (נכון לשנת 2024-2025). 
+                ברגע שאתם מזינים קורס, המערכת משייכת אותו לקטגוריה הנכונה ומחשבת עבורכם כמה נ"ז נשארו לכם עד לסיום התואר.
+              </p>
             </div>
-         </div>
 
-         <div className="bg-white p-10 rounded-[2.5rem] border border-zinc-100 shadow-sm">
-            <h2 className="text-2xl font-black text-emerald-600 mb-6 flex items-center gap-3">
-               <span>🛠️</span>
-               איך משתמשים?
-            </h2>
-            <ol className="space-y-4 text-zinc-600 font-medium list-decimal list-inside pr-2 leading-relaxed">
-               <li>עוברים לטאב <strong>&quot;רשימת קורסים&quot;</strong>.</li>
-               <li>מזינים את כל הקורסים שכבר השלמתם (או שאתם לומדים כרגע).</li>
-               <li>בוחרים עבור כל קורס לאיזה חוג וקטגוריה הוא שייך.</li>
-               <li>המערכת תחשב עבורכם אוטומטית את המצב בטאב <strong>&quot;מעקב נ״ז&quot;</strong>.</li>
-            </ol>
-         </div>
-
-         <div className="bg-zinc-900 text-white p-10 rounded-[2.5rem] md:col-span-2 shadow-2xl shadow-zinc-200">
-            <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
-               <span>⚠️</span>
-               כללים חשובים (חשוב לקרוא!)
-            </h2>
-            <div className="grid md:grid-cols-3 gap-10">
-               <div>
-                  <h3 className="font-black text-blue-400 mb-3">אין כפל קורסים</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed">כל קורס נספר פעם אחת בלבד. לא ניתן לשייך קורס אחד לשני חוגים שונים בו-זמנית במערכת זו.</p>
-               </div>
-               <div>
-                  <h3 className="font-black text-emerald-400 mb-3">אבני פינה</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed">יש להזין קורסי אבני פינה תחת החוג שבו תרצו שהם ייספרו (כלכלה או מנהל עסקים) תחת קטגוריית &quot;אבני פינה&quot;.</p>
-               </div>
-               <div>
-                  <h3 className="font-black text-yellow-400 mb-3">שמירת נתונים</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed">הנתונים שלכם נשמרים בדפדפן המקומי בלבד. מחיקת היסטוריית הגלישה עלולה למחוק את הנתונים שהזנתם.</p>
-               </div>
+            <div className="p-8 bg-zinc-50 rounded-3xl border border-zinc-100 space-y-4">
+               <h4 className="text-zinc-900 font-black flex items-center gap-3">
+                  <ShieldCheck size={20} className="text-emerald-600" />
+                  פרטיות ואבטחת נתונים
+               </h4>
+               <p className="text-sm">
+                 כל הנתונים שאתם מזינים במערכת - שמות, ציונים וקורסים - **נשמרים על הדפדפן שלכם בלבד** (Local Storage).
+                 שום דבר לא נשלח לשרת חיצוני ושום דבר לא נשמר בענן. המשמעות היא שהנתונים שלכם פרטיים לחלוטין, 
+                 אך הם זמינים רק מהמכשיר והדפדפן שבו השתמשתם.
+               </p>
             </div>
-         </div>
+          </CardContent>
+        </Card>
+
+        <div className="space-y-8">
+          <Card className="border-none shadow-xl shadow-zinc-200/50 rounded-[2.5rem] p-8 space-y-6">
+            <h3 className="text-xl font-black text-zinc-900">צור קשר</h3>
+            <div className="space-y-4">
+               <a href="mailto:support@hujitracker.ac.il" className="flex items-center gap-4 p-4 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-600 hover:bg-zinc-100 transition-all group">
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm text-zinc-400 group-hover:text-blue-600 transition-colors">
+                    <Mail size={18} />
+                  </div>
+                  <span className="font-bold text-sm">support@hujitracker.ac.il</span>
+               </a>
+               <a href="https://github.com/sagimaskal" className="flex items-center gap-4 p-4 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-600 hover:bg-zinc-100 transition-all group">
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm text-zinc-400 group-hover:text-zinc-900 transition-colors">
+                    <Code2 size={18} />
+                  </div>
+                  <span className="font-bold text-sm">GitHub Repository</span>
+               </a>
+            </div>
+          </Card>
+
+          <div className="p-8 bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-[2.5rem] shadow-2xl text-white space-y-4">
+            <h4 className="font-black text-lg">תרומה לפרויקט</h4>
+            <p className="text-zinc-400 text-sm font-medium leading-relaxed">
+              הפרויקט הוא קוד פתוח. אם מצאתם טעות בחישוב הנ"ז או שיש לכם הצעה לשיפור, נשמח שתפתחו Issue ב-GitHub.
+            </p>
+            <Button className="w-full bg-white text-zinc-900 hover:bg-zinc-100 rounded-2xl mt-4">
+              צפייה בקוד המקור
+              <ExternalLink size={16} className="mr-2" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
