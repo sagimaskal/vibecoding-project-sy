@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
 import { Course, Major } from "@/lib/types";
+import { evaluateRequirements, EvaluationResult } from "@/utils/requirementEvaluator";
 
 interface Stats {
   total: number;
@@ -21,6 +22,7 @@ interface CourseContextType {
   setUserEmail: (email: string) => void;
   econStats: Stats;
   bizStats: Stats;
+  evaluation: EvaluationResult | null;
 }
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
@@ -61,7 +63,20 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   const setUserEmail = useCallback((email: string) => setUserEmailInternal(email), []);
 
   const calculateStats = (major: Major): Stats => {
-    const majorCourses = courses.filter(c => c.major === major);
+    // Only count credits for courses that are completed (with or without grade) and not failed
+    const majorCourses = courses.filter(c => {
+      if (c.major !== major) return false;
+      
+      // Basic grade check for stats (complements evaluator)
+      if (c.grade !== undefined && c.grade !== null && c.grade < 60) {
+          // We need to check rules for specific minGrade later, 
+          // but 60 is the default in evaluator too.
+          return false;
+      }
+      
+      return true;
+    });
+
     const total = majorCourses.reduce((sum, c) => sum + c.credits, 0);
     const categories = majorCourses.reduce((acc, c) => {
       acc[c.category] = (acc[c.category] || 0) + c.credits;
@@ -74,6 +89,13 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   const econStats = useMemo(() => calculateStats('Economics'), [courses]);
   const bizStats = useMemo(() => calculateStats('Business'), [courses]);
 
+  const evaluation = useMemo(() => {
+    if (!isLoaded) return null;
+    const result = evaluateRequirements(courses);
+    console.log("Requirement Evaluation Result:", result);
+    return result;
+  }, [courses, isLoaded]);
+
   const addCourse = useCallback((courseData: Omit<Course, "id">) => {
     const isDuplicate = courses.some((c) => c.number === courseData.number);
     if (isDuplicate) {
@@ -85,6 +107,15 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
       ...courseData, 
       id: Math.random().toString(36).substr(2, 9)
     };
+    
+    console.log("Adding Course:", {
+        id: newCourse.id,
+        course_id: newCourse.number,
+        name: newCourse.name,
+        grade: newCourse.grade,
+        credits: newCourse.credits
+    });
+
     setCourses(prev => [...prev, newCourse]);
     return true;
   }, [courses]);
@@ -131,8 +162,9 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     userEmail,
     setUserEmail,
     econStats,
-    bizStats
-  }), [courses, addCourse, updateCourse, deleteCourse, resetData, isLoaded, userName, setUserName, userEmail, setUserEmail, econStats, bizStats]);
+    bizStats,
+    evaluation
+  }), [courses, addCourse, updateCourse, deleteCourse, resetData, isLoaded, userName, setUserName, userEmail, setUserEmail, econStats, bizStats, evaluation]);
 
   return <CourseContext.Provider value={value}>{children}</CourseContext.Provider>;
 }
