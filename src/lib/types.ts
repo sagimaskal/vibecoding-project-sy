@@ -24,23 +24,6 @@ export interface Course {
   year: string;
   semester: 'א' | 'ב' | 'קיץ';
   grade?: number;
-  starred?: boolean;
-}
-
-export interface ResumeData {
-  fullName: string;
-  email: string;
-  phone?: string;
-  linkedIn?: string;
-  education: {
-    institution: string;
-    degree: string;
-    startYear: string;
-    endYear: string;
-    gpa?: number;
-  };
-  skills: string[];
-  featuredCourses: Course[];
 }
 
 export interface DegreeRequirement {

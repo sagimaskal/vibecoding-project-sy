@@ -6,7 +6,6 @@ import { useCourses } from "./CourseContext";
 import { 
   LayoutDashboard, 
   BookOpen, 
-  FileText, 
   Info, 
   LogOut, 
   RefreshCcw,
@@ -22,7 +21,6 @@ export function Sidebar() {
   const navItems = [
     { name: "מבט על", href: "/portal/stats", icon: LayoutDashboard },
     { name: "רשימת קורסים", href: "/portal/courses", icon: BookOpen },
-    { name: "בונה קורות חיים", href: "/portal/resume", icon: FileText },
     { name: "על המערכת", href: "/portal/about", icon: Info },
   ];
 

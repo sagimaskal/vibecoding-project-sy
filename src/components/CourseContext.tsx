@@ -13,7 +13,6 @@ interface CourseContextType {
   addCourse: (course: Omit<Course, "id">) => boolean;
   updateCourse: (id: string, course: Partial<Course>) => boolean;
   deleteCourse: (id: string) => void;
-  toggleStar: (id: string) => void;
   resetData: () => void;
   isLoaded: boolean;
   userName: string;
@@ -84,8 +83,7 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     
     const newCourse: Course = { 
       ...courseData, 
-      id: Math.random().toString(36).substr(2, 9),
-      starred: false 
+      id: Math.random().toString(36).substr(2, 9)
     };
     setCourses(prev => [...prev, newCourse]);
     return true;
@@ -105,21 +103,6 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     setCourses(prev => prev.map((c) => (c.id === id ? { ...c, ...updatedFields } : c)));
     return true;
   }, [courses]);
-
-  const toggleStar = useCallback((id: string) => {
-    setCourses(prev => {
-      const course = prev.find(c => c.id === id);
-      if (!course) return prev;
-      
-      const starredCount = prev.filter(c => c.starred).length;
-      if (!course.starred && starredCount >= 5) {
-        alert("ניתן לסמן עד 5 קורסים בלבד לקורות החיים");
-        return prev;
-      }
-      
-      return prev.map(c => c.id === id ? { ...c, starred: !c.starred } : c);
-    });
-  }, []);
 
   const deleteCourse = useCallback((id: string) => {
     if (confirm("האם אתה בטוח שברצונך למחוק קורס זה?")) {
@@ -141,7 +124,6 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     addCourse,
     updateCourse,
     deleteCourse,
-    toggleStar,
     resetData,
     isLoaded,
     userName,
@@ -150,7 +132,7 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     setUserEmail,
     econStats,
     bizStats
-  }), [courses, addCourse, updateCourse, deleteCourse, toggleStar, resetData, isLoaded, userName, setUserName, userEmail, setUserEmail, econStats, bizStats]);
+  }), [courses, addCourse, updateCourse, deleteCourse, resetData, isLoaded, userName, setUserName, userEmail, setUserEmail, econStats, bizStats]);
 
   return <CourseContext.Provider value={value}>{children}</CourseContext.Provider>;
 }

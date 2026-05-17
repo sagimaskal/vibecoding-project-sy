@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "מעקב אקדמי חכם לסטודנטים באוניברסיטה העברית",
 };
 
+import { AppProviders } from "@/components/providers/AppProviders";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +30,9 @@ export default function RootLayout({
       dir="rtl"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50">{children}</body>
+      <body className="min-h-full flex flex-col bg-zinc-50">
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }

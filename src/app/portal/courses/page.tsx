@@ -12,17 +12,13 @@ import {
   Filter, 
   Trash2, 
   Edit2, 
-  Star, 
-  BookOpen, 
-  ExternalLink,
-  MoreVertical,
-  ChevronDown
+  BookOpen
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CoursesPage() {
-  const { courses, deleteCourse, toggleStar } = useCourses();
+  const { courses, deleteCourse } = useCourses();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -133,17 +129,6 @@ export default function CoursesPage() {
                         </div>
 
                         <div className="flex items-center gap-2 justify-end">
-                          <button
-                            onClick={() => toggleStar(course.id)}
-                            className={cn(
-                              "p-3 rounded-xl transition-all",
-                              course.starred 
-                                ? "bg-amber-50 text-amber-500 shadow-sm" 
-                                : "text-zinc-300 hover:text-amber-400 hover:bg-amber-50/30"
-                            )}
-                          >
-                            <Star size={18} fill={course.starred ? "currentColor" : "none"} />
-                          </button>
                           <button
                             onClick={() => handleEdit(course)}
                             className="p-3 rounded-xl text-zinc-300 hover:text-blue-600 hover:bg-blue-50 transition-all"

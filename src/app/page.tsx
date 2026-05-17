@@ -10,8 +10,7 @@ import {
   ChevronLeft,
   ArrowRight,
   PlusCircle,
-  BarChart3,
-  FileBadge
+  BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -66,7 +65,7 @@ export default function LandingPage() {
               
               <p className="text-xl text-zinc-500 leading-relaxed max-w-lg font-medium">
                 המערכת המתקדמת ביותר למעקב אקדמי באוניברסיטה העברית.
-                חישוב נ"ז בזמן אמת, ניהול קורסים ובניית קורות חיים אקדמיים - הכל במקום אחד.
+                חישוב נ"ז בזמן אמת וניהול קורסים - הכל במקום אחד.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-5 items-center">
@@ -177,13 +176,6 @@ export default function LandingPage() {
                 icon: PlusCircle,
                 color: "text-emerald-600",
                 bg: "bg-emerald-50"
-              },
-              { 
-                title: "בונה קורות חיים", 
-                desc: "הפיקו קורות חיים אקדמיים באנגלית על בסיס נתוני התואר שלכם בלחיצת כפתור.", 
-                icon: FileBadge,
-                color: "text-purple-600",
-                bg: "bg-purple-50"
               }
             ].map((feature, i) => (
               <motion.div 
