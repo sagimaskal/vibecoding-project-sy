@@ -14,7 +14,21 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
+import { createClient } from "@/utils/supabase/client";
+import { useState, useEffect } from "react";
+
 export default function LandingPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setIsLoggedIn(!!user);
+    };
+    checkUser();
+  }, [supabase]);
+
   return (
     <div className="min-h-screen bg-[#fdfdfd] text-zinc-950 overflow-x-hidden" dir="rtl">
       {/* Decorative background elements */}
@@ -36,9 +50,9 @@ export default function LandingPage() {
             </div>
           </div>
           
-          <Link href="/login">
+          <Link href={isLoggedIn ? "/portal/stats" : "/login"}>
             <Button variant="secondary" className="gap-2 rounded-2xl px-6">
-              כניסה למערכת
+              {isLoggedIn ? "למעבר לפורטל" : "כניסה למערכת"}
               <ChevronLeft size={16} />
             </Button>
           </Link>
@@ -69,9 +83,9 @@ export default function LandingPage() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-5 items-center">
-                <Link href="/login" className="w-full sm:w-auto">
+                <Link href={isLoggedIn ? "/portal/stats" : "/login"} className="w-full sm:w-auto">
                   <Button size="lg" className="w-full sm:w-auto rounded-[2rem] px-10 gap-3 text-lg h-16 shadow-2xl shadow-blue-200">
-                    מתחילים עכשיו
+                    {isLoggedIn ? "מעבר לפורטל" : "מתחילים עכשיו"}
                     <ArrowRight size={20} className="rotate-180" />
                   </Button>
                 </Link>
