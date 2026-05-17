@@ -1,0 +1,86 @@
+{
+  "transitions": {
+    "YearAtoB": {
+      "regularPass": {
+        "groups": [
+          {
+            "id": "IntroEconomics",
+            "name": "מבוא לכלכלה א ו-ב",
+            "courses": [
+              { "courseId": "57107", "name": "מבוא לכלכלה א (מיקרו)", "minGrade": 60 },
+              { "courseId": "57108", "name": "מבוא לכלכלה ב (מאקרו)", "minGrade": 60 }
+            ],
+            "averageRequirement": 70
+          },
+          {
+            "id": "Calculus",
+            "name": "חשבון דיפרנציאלי ואינטגרלי",
+            "required": [
+              { "courseId": "57121", "name": "חדו״א א", "minGrade": 60 },
+              { "courseId": "57122", "name": "חדו״א ב", "minGrade": 60 }
+            ],
+            "alternatives": [
+              {
+                "id": "StatsCalculus",
+                "name": "חדו״א ב לסטטיסטיקאים",
+                "courses": [{ "courseId": "52113", "minGrade": 60 }]
+              },
+              {
+                "id": "MathCalculus",
+                "name": "אינפי 1+2 למתמטיקאים",
+                "courses": [
+                  { "courseId": "80131", "minGrade": 60 },
+                  { "courseId": "80132", "minGrade": 60 }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "Statistics",
+            "name": "סטטיסטיקה",
+            "required": [
+              { "courseId": "57340", "name": "סטטיסטיקה א", "minGrade": 60 },
+              { "courseId": "57341", "name": "סטטיסטיקה ב", "minGrade": 60 }
+            ],
+            "alternatives": [
+              {
+                "id": "StatsProb",
+                "name": "סטטיסטיקה א + הסתברות לסטטיסטיקאים",
+                "courses": [
+                  { "courseId": "57340", "minGrade": 60 },
+                  { "courseId": "52220", "minGrade": 60 }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "conditionalPass": {
+        "economics": {
+          "courses": ["57107", "57108"],
+          "minGradePerCourse": 55,
+          "minAverage": 70
+        },
+        "mathStats": {
+          "pool": ["57121", "57122", "57340", "57341"],
+          "minGrade": 60,
+          "requiredCount": 3
+        },
+        "notes": "סטודנט במעמד על תנאי חייב לחזור על הקורסים בהם נכשל במהלך שנה ב'. אי עמידה בתנאים אלו תמנע מעבר לשנה ג'."
+      }
+    },
+    "YearBtoC": {
+      "requirements": [
+        { "id": "PassAllYearA", "name": "מעבר כל קורסי החובה של שנה א'" }
+      ],
+      "prerequisites": [
+        { "courseId": "57305", "name": "מיקרו-כלכלה", "pre": ["YearA_Conditional_OR_Regular"] },
+        { "courseId": "57322", "name": "מבוא לאקונומטריקה", "pre": ["57340", "57341"] }
+      ]
+    }
+  },
+  "overlapRules": [
+    { "courses": ["57121", "57122", "52113", "80131", "80132"], "note": "חפיפה בתחומי חדו״א/אינפי" },
+    { "courses": ["57341", "52220"], "note": "חפיפה בסטטיסטיקה ב / הסתברות" }
+  ]
+}

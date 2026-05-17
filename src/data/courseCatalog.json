@@ -1,0 +1,1487 @@
+[
+  {
+    "course_id": "57121",
+    "course_name": "חשבון דיפרנציאלי ואינטגרלי לכלכלנים א'",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57107",
+    "course_name": "מבוא לכלכלה א (מיקרו)",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57340",
+    "course_name": "סטטיסטיקה לכלכלנים א'",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57122",
+    "course_name": "חשבון דיפרנציאלי ואינטגרלי לכלכלנים ב'",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57108",
+    "course_name": "מבוא לכלכלה ב (מקרו)",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57341",
+    "course_name": "סטטיסטיקה לכלכלנים ב'",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57305",
+    "course_name": "מאקרו כלכלה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57322",
+    "course_name": "מבוא לאקונומטריקה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57307",
+    "course_name": "תורת המחירים א",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57308",
+    "course_name": "תורת המחירים ב",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57104",
+    "course_name": "כלכלה של אסונות ושינויי אקלים",
+    "credits": 1,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57654",
+    "course_name": "מסחר בינלאומי",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57496",
+    "course_name": "סוגיות בכלכלת הפירמה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "54121",
+    "course_name": "הסטוריה כלכלית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "57013",
+    "course_name": "ניתוח מדיניות",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "57133",
+    "course_name": "כלכלה ציבורית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57012",
+    "course_name": "כלכלת בריאות",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57020",
+    "course_name": "כלכלת מזרח תיכון",
+    "credits": 2,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57495",
+    "course_name": "כלכלת עבודה",
+    "credits": 2,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57124",
+    "course_name": "מדיניות מוניטרית: מהתיאוריה לאתגרים של היום",
+    "credits": 2,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57002",
+    "course_name": "מימון בינלאומי",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57311",
+    "course_name": "נושאים במקרו כלכלה של אי-ודאות ושווקים פיננסים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57466",
+    "course_name": "שווקים ותחרות בישראל",
+    "credits": 3,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57468",
+    "course_name": "אקונומטריקה יישומית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "57318",
+    "course_name": "אקונומטריקה של הערכת מדיניות",
+    "credits": 2,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "57503",
+    "course_name": "נושאים בכלכלת תחבורה",
+    "credits": 2,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "57717",
+    "course_name": "צמיחה כלכלית",
+    "credits": 2,
+    "department": "Economics",
+    "category": "חובה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "57556",
+    "course_name": "מתמטיקה מתקדמת לכלכלנים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57509",
+    "course_name": "אלגברה לינארית לכלכלנים",
+    "credits": 3,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57003",
+    "course_name": "מבוא לניתוח נתונים בכלכלה בעזרת Pyton",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57102",
+    "course_name": "מימון לכלכלנים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57705",
+    "course_name": "נושאים במדיניות פיסקלית",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57497",
+    "course_name": "שיטות בלמידת מכונה לכלכלנים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57893",
+    "course_name": "הגורמים וההשלכות של אי-שוויון בהכנסה",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57638",
+    "course_name": "כלכלת עבודה אמפירית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57123",
+    "course_name": "כלכלת תקשורת",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57506",
+    "course_name": "מאקרו כלכלה מתקדמת",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57469",
+    "course_name": "נושאים בחקר המיסוי אמפירי",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57128",
+    "course_name": "סוגיות נבחרות בכלכלה התנהגותית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57493",
+    "course_name": "נושאים בביג דאטה בכלכלה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "57533",
+    "course_name": "מחקר כלכלי על אפליה והטיה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "57736",
+    "course_name": "נושאים בכלכלה פוליטית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "57117",
+    "course_name": "נושאים מתקדמים בכלכלת עבודה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "57667",
+    "course_name": "כלכלת אינפורמציה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57125",
+    "course_name": "נושאים בחקר מקרו כלכלה אמפירית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57811",
+    "course_name": "כלכלת הגירה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57152",
+    "course_name": "נושאים במיקרו כלכלה אמפירית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57255",
+    "course_name": "נושאים בעיצוב שווקים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57893",
+    "course_name": "הגורמים וההשלכות של אי-שוויון בהכנסה",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57126",
+    "course_name": "השקעות בינלאומיות ושערי חליפין",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57552",
+    "course_name": "חיזוי במאקרו כלכלה ובשוק ההון",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57467",
+    "course_name": "כלכלה התנהגותית ויישומיים אימפירים",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57807",
+    "course_name": "כלכלה פוליטית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57104",
+    "course_name": "כלכלה של אסונות ושינויי אקלים",
+    "credits": 1,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57010",
+    "course_name": "כלכלת ישראל",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57735",
+    "course_name": "כלכלת עבודה מבנית",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57506",
+    "course_name": "מאקרו כלכלה מתקדמת",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57654",
+    "course_name": "מסחר בינלאומי",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57253",
+    "course_name": "משברים פיננסיים וכלכליים והחשיבה במאקרו-כלכלה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57496",
+    "course_name": "סוגיות בכלכלת הפירמה",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57554",
+    "course_name": "תורת המשחקים לכלכלנים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "54121",
+    "course_name": "הסטוריה כלכלית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "57132",
+    "course_name": "החלטות פיננסיות של הפירמה",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "57836",
+    "course_name": "סדנה בכלכלה התנהגותית",
+    "credits": 1,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "57011",
+    "course_name": "היבטים יישומיים של חוק התחרות הכלכלית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57777",
+    "course_name": "כלכלה התנהגותית וניסויית למוסמך",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57133",
+    "course_name": "כלכלה ציבורית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57012",
+    "course_name": "כלכלת בריאות",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57020",
+    "course_name": "כלכלת מזרח תיכון",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57510",
+    "course_name": "כשלי שוק",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57124",
+    "course_name": "מדיניות מוניטרית: מהתיאוריה לאתגרים של היום",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57002",
+    "course_name": "מימון בינלאומי",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57588",
+    "course_name": "מימון למוסמך",
+    "credits": 3,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57311",
+    "course_name": "נושאים במקרו כלכלה של אי-ודאות ושווקים פיננסים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57747",
+    "course_name": "סדנה בארגון תעשייתי",
+    "credits": 1,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57466",
+    "course_name": "שווקים ותחרות בישראל",
+    "credits": 3,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57468",
+    "course_name": "אקונומטריקה יישומית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57318",
+    "course_name": "אקונומטריקה של הערכת מדיניות",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57687",
+    "course_name": "כלכלת הדיור למוסמך",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57895",
+    "course_name": "מבנה שווקים למוסמך (ג'):  פירמה ושוק",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57806",
+    "course_name": "מימון בינלאומי למוסמך",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57555",
+    "course_name": "מכרזים: תיאוריה ומעשה",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57257",
+    "course_name": "מסחר בינלאומי ופיתוח",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57503",
+    "course_name": "נושאים בכלכלת תחבורה",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "57600",
+    "course_name": "תכנון וניתוח של מדיניות ציבורית: שיטות אנליטיות ויישומים",
+    "credits": 1,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "59823",
+    "course_name": "הובלת מדיניות- הלכה למעשה",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55650",
+    "course_name": "מבוא לחדשנות פיננסית ופינטק",
+    "credits": 3,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57556",
+    "course_name": "מתמטיקה מתקדמת לכלכלנים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "57836",
+    "course_name": "סדנה בכלכלה התנהגותית",
+    "credits": 1,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "57509",
+    "course_name": "אלגברה לינארית לכלכלנים",
+    "credits": 3,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57127",
+    "course_name": "הסטוריה של המחשבה הכלכלית",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55403",
+    "course_name": "כלכלה, שווקים ועסקים במזרח אסיה",
+    "credits": 3,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57003",
+    "course_name": "מבוא לניתוח נתונים בכלכלה בעזרת Pyton",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "59642",
+    "course_name": "מדיניות כלכלית בישראל: הלכה למעשה?",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55733",
+    "course_name": "מודלים ואלגוריתמים בתורת המשחקים",
+    "credits": 3,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57102",
+    "course_name": "מימון לכלכלנים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57705",
+    "course_name": "נושאים במדיניות פיסקלית",
+    "credits": 2,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "57497",
+    "course_name": "שיטות בלמידת מכונה לכלכלנים",
+    "credits": 4,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "51127",
+    "course_name": "מבוא למדע הנתונים",
+    "credits": 5,
+    "department": "Economics",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "55802",
+    "course_name": "יסודות החשבונאות",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55102",
+    "course_name": "יסודות מדעי ההתנהגות",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55117",
+    "course_name": "השתתפות בניסויים",
+    "credits": 0,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "א",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "55124",
+    "course_name": "מודלים עסקיים באקסל",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "א",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "400059",
+    "course_name": "חדשנות - ליווי כלכלי מכוון טראומה",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "א",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "55223",
+    "course_name": "מסוגלות גלובלית בזירות רב תרבותיות",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "א",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55687",
+    "course_name": "התנהגות ארגונית",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55803",
+    "course_name": "יסודות המימון",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55804",
+    "course_name": "יסודות השיווק",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55312",
+    "course_name": "נתונים וטכנולוגיה בעסקים",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55945",
+    "course_name": "שיטות כמותיות בניהול",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ב",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55650",
+    "course_name": "מבוא לחדשנות פיננסית ופינטק",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55826",
+    "course_name": "ניהול התקשורת והפרסום בעידן הדיגיטלי",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55432",
+    "course_name": "קבלת החלטות: אינטואיציה, אסטרטגיה, ומה שביניהן",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55124",
+    "course_name": "מודלים עסקיים באקסל",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "400059",
+    "course_name": "חדשנות - ליווי כלכלי מכוון טראומה",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "שנתי"
+  },
+  {
+    "course_id": "55527",
+    "course_name": "אתיקה בעסקים",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55324",
+    "course_name": "בנה את הרעיון שלך: מפנטזיה למציאות ב-Vibe Coding",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55308",
+    "course_name": "מבוא לבסיסי נתונים ובינה עסקית",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55223",
+    "course_name": "מסוגלות גלובלית בזירות רב תרבותיות",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55531",
+    "course_name": "תיאוריה ומעשה במשא ומתן",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55861",
+    "course_name": "קורס רב תרבותי ביזמות - קורס קיץ",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": "סמסטר קיץ"
+  },
+  {
+    "course_id": "55430",
+    "course_name": "זכר ונקבה ברא אותם:  מבטים ביקורתיים של המגדר והסדר החברתי",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "55429",
+    "course_name": "טכנולוגיה בישראל - מהמעבדה באקדמיה לפס היצור",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "55980",
+    "course_name": "יזמות אימפקט בירושלים- יצירת מרחב בר קיימא",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "55103",
+    "course_name": "יסודות המנהיגות",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "55300",
+    "course_name": "יסודות מדע המידע",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "55534",
+    "course_name": "ניהול וניתוח אשראי",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "55836",
+    "course_name": "ניהול פרוייקטים",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ב",
+    "semester": ""
+  },
+  {
+    "course_id": "55510",
+    "course_name": "ניהול אסטרטגי",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55506",
+    "course_name": "ניהול התפעול",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55007",
+    "course_name": "HUBS Aid – בנייה ויישום של תכנית שיקום לעסקים קטנים ובינוניים בישראל",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55337",
+    "course_name": "כתיבת תוכנית עסקית למיזם חברתי",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55507",
+    "course_name": "סדנה יישומית במינהל עסקים",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55404",
+    "course_name": "סמינר  ביזמות טכנולוגית א",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55529",
+    "course_name": "סמינר - חדשנות בניהול מותגים ואסטרטגיה שיווקית",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55301",
+    "course_name": "תחרות, תמחור ודוחות כספיים א'",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55022",
+    "course_name": "כשבינה מלאכותית פוגשת אנשים וחברה",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55408",
+    "course_name": "סמינר ביזמות טכנולוגית ב",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55415",
+    "course_name": "סמינר בשוק ההון",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55717",
+    "course_name": "תחרות -חדשנות בניהול מותגים - המשך",
+    "credits": 0,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55305",
+    "course_name": "תחרות, תמחור ודוחות כספיים ב'",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55970",
+    "course_name": "אנליזה עסקית בחברות היי-טק",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "חובה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "40481",
+    "course_name": "איכות הסביבה: פנים רבות לה",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55991",
+    "course_name": "אנליטיקה של ניהול קשרי לקוחות",
+    "credits": 1,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55939",
+    "course_name": "חקר ביצועים 2: מודלים  סטוכסטיים",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "62980",
+    "course_name": "יזמות אימפקט בירושלים- יצירת מרחב בר קיימא",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55826",
+    "course_name": "ניהול התקשורת והפרסום בעידן הדיגיטלי",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55432",
+    "course_name": "קבלת החלטות: אינטואיציה, אסטרטגיה, ומה שביניהן",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "55124",
+    "course_name": "מודלים עסקיים באקסל",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר א או ב"
+  },
+  {
+    "course_id": "55527",
+    "course_name": "אתיקה בעסקים",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "40104",
+    "course_name": "גאוגרפיה של פעילות כלכלית",
+    "credits": 3.5,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "46142",
+    "course_name": "יחסי מדינה ופיתוח כלכלי בסין העכשווית",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55403",
+    "course_name": "כלכלה, שווקים ועסקים במזרח אסיה",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55308",
+    "course_name": "מבוא לבסיסי נתונים ובינה עסקית",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55968",
+    "course_name": "שיווק ובינה מלאכותית",
+    "credits": 1,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55531",
+    "course_name": "תיאוריה ומעשה במשא ומתן",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "55430",
+    "course_name": "זכר ונקבה ברא אותם:  מבטים ביקורתיים של המגדר והסדר החברתי",
+    "credits": 4,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "55429",
+    "course_name": "טכנולוגיה בישראל - מהמעבדה באקדמיה לפס היצור",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "55788",
+    "course_name": "טכנולוגיה ועסקים",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "55300",
+    "course_name": "יסודות מדע המידע",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "55508",
+    "course_name": "מדיניות מחירים בתמהיל השיווק",
+    "credits": 1,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "55775",
+    "course_name": "מימון המונים ושווקים אלטרנטיביים",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "55534",
+    "course_name": "ניהול וניתוח אשראי",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "55836",
+    "course_name": "ניהול פרוייקטים",
+    "credits": 3,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  },
+  {
+    "course_id": "55718",
+    "course_name": "רגולציה פיננסית לשיפור השווקים: עקרונות, מוסדות, יישומים",
+    "credits": 2,
+    "department": "Business Administration",
+    "category": "בחירה",
+    "year": "ג",
+    "semester": ""
+  }
+]
