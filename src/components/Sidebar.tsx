@@ -14,29 +14,9 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/Button";
 
-import { logout } from "@/app/auth/actions";
-import { createClient } from "@/utils/supabase/client";
-import { useState, useEffect } from "react";
-
 export function Sidebar() {
   const pathname = usePathname();
   const { userName, resetData } = useCourses();
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const supabase = createClient();
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUserEmail(user.email ?? null);
-      }
-    };
-    getUser();
-  }, [supabase]);
-
-  const handleLogout = async () => {
-    await logout();
-  };
 
   const navItems = [
     { name: "מבט על", href: "/portal/stats", icon: LayoutDashboard },
@@ -59,7 +39,7 @@ export function Sidebar() {
 
         <div className="bg-zinc-50 rounded-2xl p-5 border border-zinc-100/50">
           <p className="text-[10px] text-zinc-400 font-black uppercase tracking-[0.2em] mb-2">סטודנט/ית</p>    
-          <p className="font-black text-zinc-800 truncate text-sm">{userEmail || userName || "אורח/ת"}</p>
+          <p className="font-black text-zinc-800 truncate text-sm">{userName || "אורח/ת"}</p>
         </div>
       </div>
 
@@ -94,14 +74,15 @@ export function Sidebar() {
           <RefreshCcw size={16} />
           איפוס נתונים
         </Button>
-        <Button
-          variant="ghost"
-          onClick={handleLogout}
-          className="w-full justify-start gap-3 text-zinc-400 hover:text-zinc-900 px-5"
-        >
-          <LogOut size={16} />
-          יציאה
-        </Button>
+        <Link href="/">
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-3 text-zinc-400 hover:text-zinc-900 px-5"
+          >
+            <LogOut size={16} />
+            יציאה
+          </Button>
+        </Link>
       </div>
     </aside>
   );
