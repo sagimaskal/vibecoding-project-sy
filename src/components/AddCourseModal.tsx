@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useCourses } from "./CourseContext";
 import { Major, EconomicsCategory, BusinessCategory } from "@/lib/types";
 import { ECONOMICS_REQUIREMENTS, BUSINESS_REQUIREMENTS } from "@/lib/types";
 import { Button } from "./ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
-import { X, Check, Search, AlertCircle } from "lucide-react";
+import { X, Check, Search, AlertCircle, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import courseCatalog from "@/data/courseCatalog.json";
@@ -20,11 +20,14 @@ interface AddCourseModalProps {
 
 export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModalProps) {
   const { addCourse, updateCourse } = useCourses();
+  
+  // Search and selection state
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  // Form state
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [credits, setCredits] = useState<number>(2);
@@ -34,6 +37,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
   const [category, setCategory] = useState<EconomicsCategory | BusinessCategory>("Mandatory");
   const [grade, setGrade] = useState<string>("");
   const [status, setStatus] = useState<"not_completed" | "completed_without_grade" | "completed_with_grade">("completed_with_grade");
+  const [isCatalogCourse, setIsCatalogCourse] = useState(false);
 
   useEffect(() => {
     if (editingCourse) {
@@ -46,10 +50,22 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
       setCategory(editingCourse.category);
       setGrade(editingCourse.grade?.toString() || "");
       setStatus(editingCourse.grade !== undefined ? "completed_with_grade" : "completed_without_grade");
+      setIsCatalogCourse(true); // Treat editing as catalog course to lock fields
     } else {
       resetForm();
     }
   }, [editingCourse, isOpen]);
+
+  // Handle clicks outside of dropdown
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const resetForm = () => {
     setName("");
@@ -62,7 +78,9 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
     setGrade("");
     setStatus("completed_with_grade");
     setSearchTerm("");
-    setSelectedCourse(null);
+    setSearchResults([]);
+    setShowDropdown(false);
+    setIsCatalogCourse(false);
   };
 
   const handleSearch = (term: string) => {
@@ -82,11 +100,10 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
   };
 
   const selectCatalogCourse = (course: any) => {
-    setSelectedCourse(course);
     setName(course.course_name);
     setNumber(course.course_id);
     setCredits(course.credits);
-    setMajor(course.department as Major);
+    setMajor(course.department as Major === 'Business Administration' ? 'Business' : 'Economics');
     
     // Map catalog category to system category
     if (course.category === "חובה") setCategory("Mandatory");
@@ -95,10 +112,10 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
     
     setSearchTerm(course.course_name);
     setShowDropdown(false);
+    setIsCatalogCourse(true);
   };
 
   const getMinGrade = (courseId: string): number => {
-    // Check rules for specific minGrade
     const rules = requirementRules.transitions.YearAtoB.regularPass.groups;
     for (const group of rules) {
         if (group.courses) {
@@ -116,6 +133,11 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!number) {
+        alert("נא לבחור קורס מהשנתון");
+        return;
+    }
+
     let numericGrade: number | undefined = undefined;
     if (status === "completed_with_grade") {
         if (!grade) {
@@ -123,12 +145,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
             return;
         }
         numericGrade = parseInt(grade);
-    } else if (status === "not_completed") {
-        // Just logic flag, usually we only add completed courses in this version
     }
-
-    const minGrade = getMinGrade(number);
-    const isFailed = status === "completed_with_grade" && numericGrade !== undefined && numericGrade < minGrade;
 
     const courseData = {
       name,
@@ -139,14 +156,8 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
       major,
       category,
       grade: status === "completed_with_grade" ? numericGrade : undefined,
+      status,
     };
-
-    console.log("Saving Course Data:", {
-        ...courseData,
-        status,
-        minGradeRequired: minGrade,
-        isFailed
-    });
 
     if (editingCourse) {
       updateCourse(editingCourse.id, courseData);
@@ -191,7 +202,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
               
               {/* Search / Autocomplete */}
               {!editingCourse && (
-                <div className="relative space-y-2">
+                <div className="relative space-y-2" ref={dropdownRef}>
                   <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mr-1">חיפוש קורס בשנתון</label>
                   <div className="relative">
                     <Search size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400" />
@@ -199,6 +210,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                       type="text"
                       value={searchTerm}
                       onChange={(e) => handleSearch(e.target.value)}
+                      onFocus={() => searchTerm.length >= 2 && setShowDropdown(true)}
                       placeholder="הקלד שם קורס או מספר קורס..."
                       className="w-full bg-zinc-50 border border-zinc-100 rounded-2xl px-12 py-4 font-bold text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all"
                     />
@@ -210,17 +222,20 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-10 w-full bg-white border border-zinc-100 rounded-2xl shadow-xl mt-2 overflow-hidden"
+                        className="absolute z-[60] w-full bg-white border border-zinc-100 rounded-2xl shadow-2xl mt-2 overflow-hidden max-h-60 overflow-y-auto"
                       >
                         {searchResults.map((c) => (
                           <button
-                            key={c.course_id}
+                            key={`${c.course_id}-${c.department}`}
                             type="button"
                             onClick={() => selectCatalogCourse(c)}
-                            className="w-full text-right px-6 py-4 hover:bg-zinc-50 border-b border-zinc-50 last:border-none flex justify-between items-center group"
+                            className="w-full text-right px-6 py-4 hover:bg-blue-50 border-b border-zinc-50 last:border-none flex justify-between items-center group transition-colors"
                           >
-                            <span className="font-bold text-zinc-800 group-hover:text-blue-600 transition-colors">{c.course_name}</span>
-                            <span className="text-xs font-black text-zinc-400 bg-zinc-100 px-2 py-1 rounded-lg">{c.course_id}</span>
+                            <div className="flex flex-col">
+                                <span className="font-bold text-zinc-800 group-hover:text-blue-700">{c.course_name}</span>
+                                <span className="text-[10px] text-zinc-400 font-black uppercase">{c.department}</span>
+                            </div>
+                            <span className="text-xs font-black text-zinc-400 bg-zinc-100 px-2 py-1 rounded-lg group-hover:bg-blue-100 group-hover:text-blue-600">{c.course_id}</span>
                           </button>
                         ))}
                       </motion.div>
@@ -235,12 +250,12 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                   <input
                     type="text"
                     required
-                    readOnly={!!selectedCourse}
+                    readOnly={isCatalogCourse}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className={cn(
                         "w-full border rounded-2xl px-5 py-4 font-bold text-zinc-900 focus:outline-none transition-all",
-                        selectedCourse ? "bg-zinc-100 border-zinc-200 text-zinc-500 cursor-not-allowed" : "bg-zinc-50 border-zinc-100 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
+                        isCatalogCourse ? "bg-zinc-50 border-zinc-100 text-zinc-500 cursor-not-allowed" : "bg-zinc-50 border-zinc-100 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
                     )}
                   />
                 </div>
@@ -249,12 +264,12 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                   <input
                     type="text"
                     required
-                    readOnly={!!selectedCourse}
+                    readOnly={isCatalogCourse}
                     value={number}
                     onChange={(e) => setNumber(e.target.value)}
                     className={cn(
                         "w-full border rounded-2xl px-5 py-4 font-bold text-zinc-900 focus:outline-none transition-all",
-                        selectedCourse ? "bg-zinc-100 border-zinc-200 text-zinc-500 cursor-not-allowed" : "bg-zinc-50 border-zinc-100 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
+                        isCatalogCourse ? "bg-zinc-50 border-zinc-100 text-zinc-500 cursor-not-allowed" : "bg-zinc-50 border-zinc-100 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
                     )}
                   />
                 </div>
@@ -267,9 +282,13 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                     type="number"
                     step="0.5"
                     required
+                    readOnly={isCatalogCourse}
                     value={credits}
                     onChange={(e) => setCredits(parseFloat(e.target.value))}
-                    className="w-full bg-zinc-50 border border-zinc-100 rounded-2xl px-5 py-4 font-bold text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all"
+                    className={cn(
+                        "w-full border rounded-2xl px-5 py-4 font-bold text-zinc-900 focus:outline-none transition-all",
+                        isCatalogCourse ? "bg-zinc-50 border-zinc-100 text-zinc-500 cursor-not-allowed" : "bg-zinc-50 border-zinc-100 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
+                    )}
                   />
                 </div>
                 <div className="space-y-2">
@@ -304,6 +323,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                     <button
                       key={m.id}
                       type="button"
+                      disabled={isCatalogCourse}
                       onClick={() => {
                         setMajor(m.id as Major);
                         setCategory("Mandatory");
@@ -312,7 +332,8 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                         "py-3 px-6 rounded-2xl font-black text-sm transition-all border-2",
                         major === m.id 
                           ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-100" 
-                          : "bg-white border-zinc-100 text-zinc-400 hover:border-zinc-200"
+                          : "bg-white border-zinc-100 text-zinc-400 hover:border-zinc-200",
+                        isCatalogCourse && major !== m.id && "opacity-50 cursor-not-allowed"
                       )}
                     >
                       {m.label}
@@ -327,8 +348,12 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                         <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mr-1">קטגוריה</label>
                         <select
                         value={category}
+                        disabled={isCatalogCourse}
                         onChange={(e) => setCategory(e.target.value as any)}
-                        className="w-full bg-zinc-50 border border-zinc-100 rounded-2xl px-5 py-4 font-bold text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all"
+                        className={cn(
+                            "w-full border rounded-2xl px-5 py-4 font-bold text-zinc-900 focus:outline-none transition-all",
+                            isCatalogCourse ? "bg-zinc-50 border-zinc-100 text-zinc-500 cursor-not-allowed appearance-none" : "bg-zinc-50 border-zinc-100 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
+                        )}
                         >
                         {categories.map(cat => <option key={cat.key} value={cat.key}>{cat.name}</option>)}
                         </select>

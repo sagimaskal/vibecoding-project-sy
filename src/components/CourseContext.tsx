@@ -67,12 +67,23 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     const majorCourses = courses.filter(c => {
       if (c.major !== major) return false;
       
-      // Basic grade check for stats (complements evaluator)
-      if (c.grade !== undefined && c.grade !== null && c.grade < 60) {
-          // We need to check rules for specific minGrade later, 
-          // but 60 is the default in evaluator too.
-          return false;
+      // 1. If status = not_completed: do not count credits
+      if (c.status === 'not_completed') return false;
+
+      // 2. If status = completed_without_grade: assume passed, count credits
+      if (c.status === 'completed_without_grade') return true;
+
+      // 3. If status = completed_with_grade:
+      if (c.status === 'completed_with_grade') {
+        const minGrade = getMinGradeForRule(c.number);
+        if (c.grade !== undefined && c.grade !== null && c.grade < minGrade) {
+            return false;
+        }
+        return true;
       }
+      
+      // Fallback for older data without status
+      if (c.grade !== undefined && c.grade !== null && c.grade < 60) return false;
       
       return true;
     });
@@ -84,6 +95,21 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     }, {} as Record<string, number>);
     
     return { total, categories };
+  };
+
+  const getMinGradeForRule = (courseId: string): number => {
+    const rules = requirementRules.transitions.YearAtoB.regularPass.groups;
+    for (const group of rules) {
+        if (group.courses) {
+            const match = group.courses.find(c => c.courseId === courseId);
+            if (match) return match.minGrade;
+        }
+        if (group.required) {
+            const match = group.required.find(c => c.courseId === courseId);
+            if (match) return match.minGrade;
+        }
+    }
+    return 60; // Default
   };
 
   const econStats = useMemo(() => calculateStats('Economics'), [courses]);

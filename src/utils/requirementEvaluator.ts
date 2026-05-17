@@ -102,7 +102,18 @@ export function evaluateRequirements(studentCourses: any[]): EvaluationResult {
  */
 function isPassed(course: any, minGrade: number): boolean {
   if (!course) return false;
-  if (course.grade === undefined || course.grade === null) return true; // Completed without grade
+  
+  // 1. If status is provided, follow it strictly
+  if (course.status) {
+    if (course.status === 'not_completed') return false;
+    if (course.status === 'completed_without_grade') return true;
+    if (course.status === 'completed_with_grade') {
+        return (course.grade !== undefined && course.grade !== null) ? course.grade >= minGrade : false;
+    }
+  }
+
+  // 2. Fallback for older data or missing status
+  if (course.grade === undefined || course.grade === null) return true; 
   return course.grade >= minGrade;
 }
 

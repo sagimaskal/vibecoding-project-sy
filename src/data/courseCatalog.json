@@ -1,5 +1,41 @@
 [
   {
+    "course_id": "52113",
+    "course_name": "חשבון דיפרנציאלי ואינטגרלי ב לסטטיסטיקאים",
+    "credits": 4,
+    "department": "Statistics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "80131",
+    "course_name": "חשבון אינפיניטסימלי 1",
+    "credits": 7,
+    "department": "Mathematics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר א"
+  },
+  {
+    "course_id": "80132",
+    "course_name": "חשבון אינפיניטסימלי 2",
+    "credits": 7,
+    "department": "Mathematics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר ב"
+  },
+  {
+    "course_id": "52220",
+    "course_name": "יסודות ההסתברות לסטטיסטיקאים",
+    "credits": 4,
+    "department": "Statistics",
+    "category": "חובה",
+    "year": "א",
+    "semester": "סמסטר ב"
+  },
+  {
     "course_id": "57121",
     "course_name": "חשבון דיפרנציאלי ואינטגרלי לכלכלנים א'",
     "credits": 4,

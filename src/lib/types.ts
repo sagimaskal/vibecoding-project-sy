@@ -24,6 +24,7 @@ export interface Course {
   year: string;
   semester: 'א' | 'ב' | 'קיץ';
   grade?: number;
+  status?: 'completed_with_grade' | 'completed_without_grade' | 'not_completed';
 }
 
 export interface DegreeRequirement {
