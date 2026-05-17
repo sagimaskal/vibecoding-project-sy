@@ -4,7 +4,6 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Info, ShieldCheck, Mail, Code2, ExternalLink, HelpCircle } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function AboutPage() {
   return (

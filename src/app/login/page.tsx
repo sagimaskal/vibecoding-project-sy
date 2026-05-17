@@ -6,7 +6,6 @@ import { useCourses } from "@/components/CourseContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { GraduationCap, ArrowRight, User, Mail } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const [name, setName] = useState("");
@@ -25,10 +24,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-6" dir="rtl">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+      <div
         className="w-full max-w-md"
       >
         <div className="flex flex-col items-center mb-10 space-y-4">
@@ -87,7 +83,7 @@ export default function LoginPage() {
         <p className="text-center mt-10 text-zinc-400 text-xs font-bold uppercase tracking-widest">
           המידע נשמר על הדפדפן שלך בלבד &copy; 2026
         </p>
-      </motion.div>
+      </div>
     </div>
   );
 }

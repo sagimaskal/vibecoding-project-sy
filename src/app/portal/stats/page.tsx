@@ -8,7 +8,9 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { Button } from "@/components/ui/Button";
 import { AddCourseModal } from "@/components/AddCourseModal";
-import { Award, Target, BookOpen, Clock, Plus } from "lucide-react";
+import { Award, Target, BookOpen, Clock, Plus, AlertCircle, Check, ShieldCheck } from "lucide-react";
+import { Card } from "@/components/ui/Card";
+import { cn } from "@/lib/utils";
 
 export default function StatsPage() {
   const { econStats, bizStats, evaluation } = useCourses();
@@ -32,9 +34,7 @@ export default function StatsPage() {
 
       {/* Evaluation Summary */}
       {evaluation && (
-        <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+        <div 
             className="grid lg:grid-cols-3 gap-6"
         >
             <Card className={cn(
@@ -99,7 +99,7 @@ export default function StatsPage() {
                     </div>
                 )}
             </Card>
-        </motion.div>
+        </div>
       )}
 
       {/* Advanced Eligibility Badge */}

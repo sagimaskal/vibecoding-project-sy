@@ -7,7 +7,6 @@ import { ECONOMICS_REQUIREMENTS, BUSINESS_REQUIREMENTS } from "@/lib/types";
 import { Button } from "./ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { X, Check, Search, AlertCircle, ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import courseCatalog from "@/data/courseCatalog.json";
 import requirementRules from "@/data/requirementRules.json";
@@ -175,17 +174,11 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+      <div 
         onClick={onClose}
         className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm"
       />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+      <div
         className="relative w-full max-w-2xl"
       >
         <Card className="border-none shadow-2xl rounded-[2.5rem] overflow-hidden">
@@ -216,31 +209,26 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                     />
                   </div>
                   
-                  <AnimatePresence>
-                    {showDropdown && searchResults.length > 0 && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-[60] w-full bg-white border border-zinc-100 rounded-2xl shadow-2xl mt-2 overflow-hidden max-h-60 overflow-y-auto"
-                      >
-                        {searchResults.map((c) => (
-                          <button
-                            key={`${c.course_id}-${c.department}`}
-                            type="button"
-                            onClick={() => selectCatalogCourse(c)}
-                            className="w-full text-right px-6 py-4 hover:bg-blue-50 border-b border-zinc-50 last:border-none flex justify-between items-center group transition-colors"
-                          >
-                            <div className="flex flex-col">
-                                <span className="font-bold text-zinc-800 group-hover:text-blue-700">{c.course_name}</span>
-                                <span className="text-[10px] text-zinc-400 font-black uppercase">{c.department}</span>
-                            </div>
-                            <span className="text-xs font-black text-zinc-400 bg-zinc-100 px-2 py-1 rounded-lg group-hover:bg-blue-100 group-hover:text-blue-600">{c.course_id}</span>
-                          </button>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {showDropdown && searchResults.length > 0 && (
+                    <div 
+                      className="absolute z-[60] w-full bg-white border border-zinc-100 rounded-2xl shadow-2xl mt-2 overflow-hidden max-h-60 overflow-y-auto"
+                    >
+                      {searchResults.map((c) => (
+                        <button
+                          key={`${c.course_id}-${c.department}`}
+                          type="button"
+                          onClick={() => selectCatalogCourse(c)}
+                          className="w-full text-right px-6 py-4 hover:bg-blue-50 border-b border-zinc-50 last:border-none flex justify-between items-center group transition-colors"
+                        >
+                          <div className="flex flex-col">
+                              <span className="font-bold text-zinc-800 group-hover:text-blue-700">{c.course_name}</span>
+                              <span className="text-[10px] text-zinc-400 font-black uppercase">{c.department}</span>
+                          </div>
+                          <span className="text-xs font-black text-zinc-400 bg-zinc-100 px-2 py-1 rounded-lg group-hover:bg-blue-100 group-hover:text-blue-600">{c.course_id}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -374,9 +362,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                   </div>
 
                   {status === "completed_with_grade" && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
+                    <div 
                         className="space-y-2"
                     >
                         <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mr-1">ציון סופי</label>
@@ -394,7 +380,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                             <AlertCircle size={12} />
                             ציון מתחת ל-60 (או סף אחר שנקבע) לא יזכה בנ״ז.
                         </p>
-                    </motion.div>
+                    </div>
                   )}
               </div>
 
@@ -410,7 +396,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
             </form>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { 
   GraduationCap, 
   Target, 
@@ -47,10 +46,7 @@ export default function LandingPage() {
         {/* Hero Section */}
         <section className="pt-16 pb-32">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <motion.div 
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+            <div 
               className="space-y-10"
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-black uppercase tracking-widest">
@@ -87,12 +83,9 @@ export default function LandingPage() {
                    <span className="text-xs font-black text-zinc-500 uppercase tracking-widest">סטודנטים כבר הצטרפו</span>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, rotate: 5 }}
-              animate={{ opacity: 1, scale: 1, rotate: 3 }}
-              transition={{ duration: 1, ease: "circOut", delay: 0.2 }}
+            <div 
               className="relative hidden lg:block"
             >
               <div className="absolute inset-0 bg-blue-600/10 rounded-full blur-[120px] -z-10 transform scale-125"></div>
@@ -137,9 +130,7 @@ export default function LandingPage() {
               </div>
 
               {/* Floating badges */}
-              <motion.div 
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              <div 
                 className="absolute -top-10 -right-10 bg-white p-6 rounded-3xl shadow-2xl border border-zinc-100 flex items-center gap-4"
               >
                 <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -149,8 +140,8 @@ export default function LandingPage() {
                   <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">סטטוס תואר</p>
                   <p className="font-black text-zinc-900 text-lg">תקין לחלוטין</p>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -178,9 +169,8 @@ export default function LandingPage() {
                 bg: "bg-emerald-50"
               }
             ].map((feature, i) => (
-              <motion.div 
+              <div 
                 key={i}
-                whileHover={{ y: -8 }}
                 className="bg-white p-12 rounded-[2.5rem] border border-zinc-100 shadow-sm hover:shadow-2xl hover:shadow-zinc-200/50 transition-all group"
               >
                 <div className={`w-16 h-16 ${feature.bg} ${feature.color} rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
@@ -188,7 +178,7 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-2xl font-black mb-4 text-zinc-900">{feature.title}</h3>
                 <p className="text-zinc-500 font-medium leading-relaxed">{feature.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>
