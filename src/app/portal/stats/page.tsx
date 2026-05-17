@@ -1,14 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { MajorDashboard } from "@/components/MajorDashboard";
 import { useCourses } from "@/components/CourseContext";
 import { ECONOMICS_REQUIREMENTS, BUSINESS_REQUIREMENTS } from "@/lib/types";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
-import { Award, Target, BookOpen, Clock } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { AddCourseModal } from "@/components/AddCourseModal";
+import { Award, Target, BookOpen, Clock, Plus } from "lucide-react";
 
 export default function StatsPage() {
   const { econStats, bizStats } = useCourses();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const totalCredits = econStats.total + bizStats.total;
   const targetCredits = ECONOMICS_REQUIREMENTS.total + BUSINESS_REQUIREMENTS.total;
@@ -19,7 +23,12 @@ export default function StatsPage() {
       <PageHeader 
         title="מבט על" 
         description="סיכום ההתקדמות שלך בתואר הדו-חוגי."
-      />
+      >
+        <Button onClick={() => setIsModalOpen(true)} className="rounded-2xl h-12 gap-2 px-6 shadow-xl shadow-blue-100">
+          <Plus size={20} />
+          הוספת קורס חדש
+        </Button>
+      </PageHeader>
 
       {/* Overview Stats */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -65,7 +74,12 @@ export default function StatsPage() {
         />
       </div>
       
-      {/* Alert for missing requirements if any specific category is critical could go here */}
+      {isModalOpen && (
+        <AddCourseModal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+        />
+      )}
     </div>
   );
 }

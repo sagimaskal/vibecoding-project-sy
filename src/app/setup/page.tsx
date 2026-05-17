@@ -1,42 +1,44 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCourses } from "@/components/CourseContext";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { GraduationCap, ArrowRight, CheckCircle2, Circle } from "lucide-react";
-import { motion } from "framer-motion";
+import { GraduationCap, ArrowRight, CheckCircle2, Circle, AlertCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+
+const DEPARTMENTS = [
+  { id: "econ", name: "כלכלה", icon: "📊", description: "תואר דו-חוגי (64 נ\"ז)" },
+  { id: "biz", name: "מנהל עסקים", icon: "💼", description: "תואר דו-חוגי (60 נ\"ז)" },
+];
 
 export default function SetupPage() {
   const router = useRouter();
   const { userName } = useCourses();
+  const [selected, setSelected] = useState<string[]>(["econ", "biz"]);
 
-  const handleCompleteSetup = () => {
-    router.push("/portal/stats");
+  const toggleMajor = (id: string) => {
+    setSelected(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(i => i !== id);
+      }
+      if (prev.length >= 2) {
+        return [prev[1], id];
+      }
+      return [...prev, id];
+    });
   };
 
-  const majors = [
-    { 
-      id: "econ", 
-      name: "כלכלה", 
-      icon: "📊", 
-      description: "תואר דו-חוגי (64 נ\"ז)",
-      color: "blue",
-      selected: true
-    },
-    { 
-      id: "biz", 
-      name: "מנהל עסקים", 
-      icon: "💼", 
-      description: "תואר דו-חוגי (60 נ\"ז)",
-      color: "emerald",
-      selected: true
+  const handleCompleteSetup = () => {
+    if (selected.length === 2 && selected.includes("econ") && selected.includes("biz")) {
+      router.push("/portal/stats");
     }
-  ];
+  };
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-6" dir="rtl">
+    <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-6 py-20" dir="rtl">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -52,50 +54,57 @@ export default function SetupPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-10">
-          {majors.map((major, i) => (
-            <motion.div
-              key={major.id}
-              initial={{ opacity: 0, x: i === 0 ? 20 : -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 + i * 0.1 }}
-            >
-              <Card className={cn(
-                "relative cursor-pointer transition-all duration-300 border-2 rounded-[2.5rem] overflow-hidden group h-full",
-                major.selected 
-                  ? major.color === "blue" ? "border-blue-600 ring-4 ring-blue-50" : "border-emerald-600 ring-4 ring-emerald-50"
-                  : "border-zinc-100 hover:border-zinc-200"
-              )}>
-                <CardContent className="p-10 flex flex-col items-center text-center space-y-6">
-                  <div className={cn(
-                    "w-20 h-20 rounded-[2rem] flex items-center justify-center text-4xl shadow-lg transition-transform group-hover:scale-110",
-                    major.color === "blue" ? "bg-blue-50" : "bg-emerald-50"
-                  )}>
-                    {major.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-black text-zinc-900 mb-2">{major.name}</h3>
-                    <p className="text-zinc-500 font-bold text-sm uppercase tracking-widest leading-relaxed">
-                      {major.description}
-                    </p>
-                  </div>
-                  <div className="absolute top-6 left-6">
-                    {major.selected ? (
-                      <CheckCircle2 className={cn(major.color === "blue" ? "text-blue-600" : "text-emerald-600")} size={24} />
-                    ) : (
-                      <Circle size={24} className="text-zinc-200" />
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+          {DEPARTMENTS.map((major, i) => {
+            const isSelected = selected.includes(major.id);
+            return (
+              <motion.div
+                key={major.id}
+                initial={{ opacity: 0, x: i === 0 ? 20 : -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 + i * 0.1 }}
+              >
+                <Card 
+                  onClick={() => toggleMajor(major.id)}
+                  className={cn(
+                    "relative cursor-pointer transition-all duration-300 border-2 rounded-[2.5rem] overflow-hidden group h-full",
+                    isSelected 
+                      ? "border-blue-600 ring-4 ring-blue-50 bg-white" 
+                      : "border-zinc-100 hover:border-zinc-200 bg-white/50"
+                  )}
+                >
+                  <CardContent className="p-10 flex flex-col items-center text-center space-y-6">
+                    <div className={cn(
+                      "w-20 h-20 rounded-[2rem] flex items-center justify-center text-4xl shadow-lg transition-transform group-hover:scale-110",
+                      isSelected ? "bg-blue-50" : "bg-zinc-50"
+                    )}>
+                      {major.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-black text-zinc-900 mb-2">{major.name}</h3>
+                      <p className="text-zinc-500 font-bold text-sm uppercase tracking-widest leading-relaxed">
+                        {major.description}
+                      </p>
+                    </div>
+                    <div className="absolute top-6 left-6">
+                      {isSelected ? (
+                        <CheckCircle2 className="text-blue-600" size={24} />
+                      ) : (
+                        <Circle size={24} className="text-zinc-100" />
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
 
         <div className="flex flex-col items-center space-y-6">
           <Button 
             size="lg" 
             onClick={handleCompleteSetup}
-            className="w-full max-w-md rounded-[2rem] h-16 gap-3 text-xl shadow-2xl shadow-blue-100"
+            disabled={selected.length < 2}
+            className="w-full max-w-md rounded-[2rem] h-16 gap-3 text-xl shadow-2xl shadow-blue-100 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             סיום הגדרה וכניסה לפורטל
             <ArrowRight size={24} className="rotate-180" />
