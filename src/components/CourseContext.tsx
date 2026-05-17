@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
 import { Course, Major } from "@/lib/types";
 import { evaluateRequirements, EvaluationResult } from "@/utils/requirementEvaluator";
+import requirementRules from "@/data/requirementRules.json";
 
 interface Stats {
   total: number;
@@ -67,25 +68,28 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     const majorCourses = courses.filter(c => {
       if (c.major !== major) return false;
       
-      // 1. If status = not_completed: do not count credits
+      // 1. If status = "not_completed" → do not count credits
       if (c.status === 'not_completed') return false;
 
-      // 2. If status = completed_without_grade: assume passed, count credits
+      // 2. If status = "completed_without_grade" → assume passed, count credits
       if (c.status === 'completed_without_grade') return true;
 
-      // 3. If status = completed_with_grade:
+      // 3. If status = "completed_with_grade":
       if (c.status === 'completed_with_grade') {
         const minGrade = getMinGradeForRule(c.number);
-        if (c.grade !== undefined && c.grade !== null && c.grade < minGrade) {
-            return false;
+        // If grade < minimumGrade → do not count credits
+        if (c.grade !== undefined && c.grade !== null) {
+            return c.grade >= minGrade;
         }
-        return true;
+        return false; // Missing grade in "completed_with_grade" status
       }
       
       // Fallback for older data without status
-      if (c.grade !== undefined && c.grade !== null && c.grade < 60) return false;
+      if (c.grade !== undefined && c.grade !== null) {
+          return c.grade >= 60;
+      }
       
-      return true;
+      return true; // Default to counting if added but no clear fail
     });
 
     const total = majorCourses.reduce((sum, c) => sum + c.credits, 0);
@@ -98,14 +102,18 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   };
 
   const getMinGradeForRule = (courseId: string): number => {
+    if (!requirementRules || !requirementRules.transitions) return 60;
+    
+    const id = String(courseId);
     const rules = requirementRules.transitions.YearAtoB.regularPass.groups;
+    
     for (const group of rules) {
         if (group.courses) {
-            const match = group.courses.find(c => c.courseId === courseId);
+            const match = group.courses.find(c => String(c.courseId) === id);
             if (match) return match.minGrade;
         }
         if (group.required) {
-            const match = group.required.find(c => c.courseId === courseId);
+            const match = group.required.find(c => String(c.courseId) === id);
             if (match) return match.minGrade;
         }
     }
