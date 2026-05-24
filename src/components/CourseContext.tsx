@@ -42,12 +42,16 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     if (savedCourses) {
       try {
         const parsedCourses = JSON.parse(savedCourses);
+        if (!Array.isArray(parsedCourses)) throw new Error("Saved data is not an array");
+
         // Ensure every course has a unique stable ID (Migration)
         const usedIds = new Set<string>();
         const migratedCourses = parsedCourses.map((c: any) => {
           let id = c.id;
           if (!id || usedIds.has(id)) {
-            id = crypto.randomUUID();
+            id = typeof crypto?.randomUUID === 'function' 
+              ? crypto.randomUUID() 
+              : Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
           }
           usedIds.add(id);
           return { ...c, id };
@@ -55,6 +59,7 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
         setCourses(migratedCourses);
       } catch (e) {
         console.error("Failed to parse courses", e);
+        alert("נראה שיש בעיה בטעינת הנתונים השמורים. אם הבעיה נמשכת, ייתכן שיהיה צורך באיפוס נתונים.");
       }
     }
     if (savedName) setUserNameInternal(savedName);
@@ -65,9 +70,16 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem("huji_degree_courses", JSON.stringify(courses));
-      localStorage.setItem("huji_user_name", userName);
-      localStorage.setItem("huji_user_email", userEmail);
+      try {
+        localStorage.setItem("huji_degree_courses", JSON.stringify(courses));
+        localStorage.setItem("huji_user_name", userName);
+        localStorage.setItem("huji_user_email", userEmail);
+      } catch (e) {
+        console.error("Failed to save to localStorage", e);
+        if (e instanceof Error && e.name === 'QuotaExceededError') {
+          alert("אין מספיק מקום באחסון הדפדפן כדי לשמור את השינויים.");
+        }
+      }
     }
   }, [courses, userName, userEmail, isLoaded]);
 
@@ -148,9 +160,13 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
       return false;
     }
     
+    const id = typeof crypto?.randomUUID === 'function' 
+      ? crypto.randomUUID() 
+      : Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+
     const newCourse: Course = { 
       ...courseData, 
-      id: crypto.randomUUID()
+      id
     };
     
     console.log("Adding Course:", {
@@ -166,6 +182,13 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   }, [courses]);
 
   const updateCourse = useCallback((id: string, updatedFields: Partial<Course>) => {
+    const courseExists = courses.some(c => c.id === id);
+    if (!courseExists) {
+      console.error(`Course with ID ${id} not found for update`);
+      alert("שגיאה: הקורס לא נמצא במערכת.");
+      return false;
+    }
+
     if (updatedFields.number) {
       const isDuplicate = courses.some(
         (c) => c.number === updatedFields.number && c.id !== id
