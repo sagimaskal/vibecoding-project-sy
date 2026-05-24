@@ -1,4 +1,24 @@
-import { Degree, RequirementCategory, Course, UserCourse } from "@prisma/client";
+// Internal interfaces to decouple from Prisma for the current version
+interface Degree {
+  name: string;
+  totalCredits: number;
+}
+
+interface RequirementCategory {
+  id: string;
+  name: string;
+  requiredCredits: number;
+}
+
+interface Course {
+  code: string;
+  credits: number;
+}
+
+interface UserCourse {
+  courseCode: string;
+  credits: number;
+}
 
 export type AuditReport = {
   degreeName: string;
