@@ -41,7 +41,18 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     
     if (savedCourses) {
       try {
-        setCourses(JSON.parse(savedCourses));
+        const parsedCourses = JSON.parse(savedCourses);
+        // Ensure every course has a unique stable ID (Migration)
+        const usedIds = new Set<string>();
+        const migratedCourses = parsedCourses.map((c: any) => {
+          let id = c.id;
+          if (!id || usedIds.has(id)) {
+            id = crypto.randomUUID();
+          }
+          usedIds.add(id);
+          return { ...c, id };
+        });
+        setCourses(migratedCourses);
       } catch (e) {
         console.error("Failed to parse courses", e);
       }
@@ -63,7 +74,26 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   const setUserName = useCallback((name: string) => setUserNameInternal(name), []);
   const setUserEmail = useCallback((email: string) => setUserEmailInternal(email), []);
 
-  const calculateStats = (major: Major): Stats => {
+  const getMinGradeForRule = (courseId: string): number => {
+    if (!requirementRules || !requirementRules.transitions) return 60;
+    
+    const id = String(courseId);
+    const rules = (requirementRules as any).transitions.YearAtoB.regularPass.groups;
+    
+    for (const group of rules) {
+        if (group.courses) {
+            const match = group.courses.find((c: any) => String(c.courseId) === id);
+            if (match) return match.minGrade;
+        }
+        if (group.required) {
+            const match = group.required.find((c: any) => String(c.courseId) === id);
+            if (match) return match.minGrade;
+        }
+    }
+    return 60; // Default
+  };
+
+  const calculateStats = useCallback((major: Major): Stats => {
     // Only count credits for courses that are completed (with or without grade) and not failed
     const majorCourses = courses.filter(c => {
       if (c.major !== major) return false;
@@ -99,29 +129,10 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     }, {} as Record<string, number>);
     
     return { total, categories };
-  };
+  }, [courses]);
 
-  const getMinGradeForRule = (courseId: string): number => {
-    if (!requirementRules || !requirementRules.transitions) return 60;
-    
-    const id = String(courseId);
-    const rules = requirementRules.transitions.YearAtoB.regularPass.groups;
-    
-    for (const group of rules) {
-        if (group.courses) {
-            const match = group.courses.find(c => String(c.courseId) === id);
-            if (match) return match.minGrade;
-        }
-        if (group.required) {
-            const match = group.required.find(c => String(c.courseId) === id);
-            if (match) return match.minGrade;
-        }
-    }
-    return 60; // Default
-  };
-
-  const econStats = useMemo(() => calculateStats('Economics'), [courses]);
-  const bizStats = useMemo(() => calculateStats('Business'), [courses]);
+  const econStats = useMemo(() => calculateStats('Economics'), [calculateStats]);
+  const bizStats = useMemo(() => calculateStats('Business'), [calculateStats]);
 
   const evaluation = useMemo(() => {
     if (!isLoaded) return null;
@@ -139,7 +150,7 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     
     const newCourse: Course = { 
       ...courseData, 
-      id: Math.random().toString(36).substr(2, 9)
+      id: crypto.randomUUID()
     };
     
     console.log("Adding Course:", {

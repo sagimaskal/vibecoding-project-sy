@@ -38,6 +38,22 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
   const [status, setStatus] = useState<"not_completed" | "completed_without_grade" | "completed_with_grade">("completed_with_grade");
   const [isCatalogCourse, setIsCatalogCourse] = useState(false);
 
+  const resetForm = () => {
+    setName("");
+    setNumber("");
+    setCredits(2);
+    setYear("א");
+    setSemester("א");
+    setMajor("Economics");
+    setCategory("Mandatory");
+    setGrade("");
+    setStatus("completed_with_grade");
+    setSearchTerm("");
+    setSearchResults([]);
+    setShowDropdown(false);
+    setIsCatalogCourse(false);
+  };
+
   useEffect(() => {
     if (editingCourse) {
       setName(editingCourse.name);
@@ -54,33 +70,6 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
       resetForm();
     }
   }, [editingCourse, isOpen]);
-
-  // Handle clicks outside of dropdown
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const resetForm = () => {
-    setName("");
-    setNumber("");
-    setCredits(2);
-    setYear("א");
-    setSemester("א");
-    setMajor("Economics");
-    setCategory("Mandatory");
-    setGrade("");
-    setStatus("completed_with_grade");
-    setSearchTerm("");
-    setSearchResults([]);
-    setShowDropdown(false);
-    setIsCatalogCourse(false);
-  };
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -213,9 +202,9 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
                     <div 
                       className="absolute z-[60] w-full bg-white border border-zinc-100 rounded-2xl shadow-2xl mt-2 overflow-hidden max-h-60 overflow-y-auto"
                     >
-                      {searchResults.map((c) => (
+                      {searchResults.map((c, i) => (
                         <button
-                          key={`${c.course_id}-${c.department}`}
+                          key={`${c.course_id}-${c.department}-${i}`}
                           type="button"
                           onClick={() => selectCatalogCourse(c)}
                           className="w-full text-right px-6 py-4 hover:bg-blue-50 border-b border-zinc-50 last:border-none flex justify-between items-center group transition-colors"
