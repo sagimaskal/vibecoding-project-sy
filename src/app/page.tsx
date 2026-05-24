@@ -61,7 +61,7 @@ export default function LandingPage() {
               
               <p className="text-xl text-zinc-500 leading-relaxed max-w-lg font-medium">
                 המערכת המתקדמת ביותר למעקב אקדמי באוניברסיטה העברית.
-                חישוב נ"ז בזמן אמת וניהול קורסים - הכל במקום אחד.
+                חישוב נ&quot;ז בזמן אמת וניהול קורסים - הכל במקום אחד.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-5 items-center">

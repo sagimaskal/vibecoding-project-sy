@@ -31,7 +31,7 @@ export default function AboutPage() {
               </h4>
               <p>
                 המערכת משתמשת במנוע חוקים דטרמיניסטי שמכיר את דרישות התואר המעודכנות של החוגים לכלכלה ומנהל עסקים (נכון לשנת 2024-2025). 
-                ברגע שאתם מזינים קורס, המערכת משייכת אותו לקטגוריה הנכונה ומחשבת עבורכם כמה נ"ז נשארו לכם עד לסיום התואר.
+                ברגע שאתם מזינים קורס, המערכת משייכת אותו לקטגוריה הנכונה ומחשבת עבורכם כמה נ&quot;ז נשארו לכם עד לסיום התואר.
               </p>
             </div>
 
@@ -71,7 +71,7 @@ export default function AboutPage() {
           <div className="p-8 bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-[2.5rem] shadow-2xl text-white space-y-4">
             <h4 className="font-black text-lg">תרומה לפרויקט</h4>
             <p className="text-zinc-400 text-sm font-medium leading-relaxed">
-              הפרויקט הוא קוד פתוח. אם מצאתם טעות בחישוב הנ"ז או שיש לכם הצעה לשיפור, נשמח שתפתחו Issue ב-GitHub.
+              הפרויקט הוא קוד פתוח. אם מצאתם טעות בחישוב הנ&quot;ז או שיש לכם הצעה לשיפור, נשמח שתפתחו Issue ב-GitHub.
             </p>
             <Button className="w-full bg-white text-zinc-900 hover:bg-zinc-100 rounded-2xl mt-4">
               צפייה בקוד המקור

@@ -1,5 +1,4 @@
 import requirementRules from '../data/requirementRules.json';
-import { Course } from '../lib/types';
 
 /**
  * Result of a requirement evaluation
@@ -14,6 +13,19 @@ export interface EvaluationResult {
   eligibleForMicro: boolean;
   eligibleForEconometrics: boolean;
   notes: string[];
+}
+
+interface RuleCourse {
+  courseId: string;
+  minGrade: number;
+}
+
+interface RuleGroup {
+  name: string;
+  courses?: RuleCourse[];
+  required?: RuleCourse[];
+  alternatives?: { courses: RuleCourse[] }[];
+  averageRequirement?: number;
 }
 
 /**
@@ -34,13 +46,13 @@ export function evaluateRequirements(studentCourses: any[]): EvaluationResult {
   };
 
   const rules = requirementRules.transitions;
-  const courseMap = new Map(studentCourses.map(c => [c.number || c.course_id, c]));
+  const courseMap = new Map<string, any>(studentCourses.map(c => [c.number || c.course_id, c]));
 
   // --- 1. Year A to Year B: Regular Pass Evaluation ---
   let regularPassGroups = 0;
   const totalRegularGroups = rules.YearAtoB.regularPass.groups.length;
 
-  for (const group of rules.YearAtoB.regularPass.groups) {
+  for (const group of rules.YearAtoB.regularPass.groups as RuleGroup[]) {
     const evaluation = evaluateGroup(group, courseMap);
     if (evaluation.passed) {
       regularPassGroups++;
@@ -120,7 +132,7 @@ function isPassed(course: any, minGrade: number): boolean {
 /**
  * Evaluates a requirement group (e.g., Calculus) including alternatives
  */
-function evaluateGroup(group: any, courseMap: Map<string, any>) {
+function evaluateGroup(group: RuleGroup, courseMap: Map<string, any>) {
   // Check primary required courses
   if (group.courses) {
     const grades = group.courses.map(c => courseMap.get(c.courseId)?.grade);
@@ -160,7 +172,7 @@ function evaluateGroup(group: any, courseMap: Map<string, any>) {
 }
 
 function evaluateConditionalEcon(cond: any, courseMap: Map<string, any>) {
-  const courses = cond.courses.map(id => courseMap.get(id));
+  const courses = (cond.courses as string[]).map(id => courseMap.get(id));
   if (courses.some(c => !c)) return { passed: false };
   
   const allAboveMin = courses.every(c => isPassed(c, cond.minGradePerCourse));
@@ -176,6 +188,6 @@ function evaluateConditionalEcon(cond: any, courseMap: Map<string, any>) {
 }
 
 function evaluateConditionalMath(cond: any, courseMap: Map<string, any>) {
-  const passedCount = cond.pool.filter(id => isPassed(courseMap.get(id), cond.minGrade)).length;
+  const passedCount = (cond.pool as string[]).filter(id => isPassed(courseMap.get(id), cond.minGrade)).length;
   return { passed: passedCount >= cond.requiredCount };
 }

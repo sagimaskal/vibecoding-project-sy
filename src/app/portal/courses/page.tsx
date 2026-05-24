@@ -107,7 +107,7 @@ export default function CoursesPage() {
                       </div>
 
                       <div className="flex flex-col md:items-center">
-                        <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest mb-1">נ"ז</span>
+                        <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest mb-1">נ&quot;ז</span>
                         <span className="font-black text-zinc-700 text-sm">{course.credits}</span>
                       </div>
 

@@ -91,7 +91,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
     setName(course.course_name);
     setNumber(course.course_id);
     setCredits(course.credits);
-    setMajor(course.department as Major === 'Business Administration' ? 'Business' : 'Economics');
+    setMajor((course.department === 'Business Administration' || course.department === 'Business') ? 'Business' : 'Economics');
     
     // Map catalog category to system category
     if (course.category === "חובה") setCategory("Mandatory");
@@ -254,7 +254,7 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
 
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mr-1">נקודות זכות (נ"ז)</label>
+                  <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mr-1">נקודות זכות (נ&quot;ז)</label>
                   <input
                     type="number"
                     step="0.5"

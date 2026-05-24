@@ -32,7 +32,7 @@ export function MajorDashboard({ title, stats, requirements, accentColor }: Majo
           <div className="flex flex-col items-end">
             <div className="flex items-baseline gap-1">
               <span className="text-5xl font-black text-zinc-900">{stats.total}</span>
-              <span className="text-zinc-400 font-bold text-sm">/ {requirements.total} נ"ז</span>
+              <span className="text-zinc-400 font-bold text-sm">/ {requirements.total} נ&quot;ז</span>
             </div>
             <span className={cn("text-xs font-black px-2 py-1 rounded-lg mt-2", lightAccentHex, textAccentHex)}>
               {percentage}% הושלמו
@@ -49,7 +49,7 @@ export function MajorDashboard({ title, stats, requirements, accentColor }: Majo
           />
           <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-zinc-400">
             <span>{percentage}%</span>
-            <span>{Math.max(0, requirements.total - stats.total)} נ"ז נותרו</span>
+            <span>{Math.max(0, requirements.total - stats.total)} נ&quot;ז נותרו</span>
           </div>
         </div>
       </CardHeader>
