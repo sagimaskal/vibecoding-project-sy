@@ -10,7 +10,10 @@ interface Stats {
   categories: Record<string, number>;
   validTotal: number;
   validCategories: Record<string, number>;
+  plannedTotal: number;
+  plannedCategories: Record<string, number>;
   hasThresholdFailures: boolean;
+  gpa: number | null;
 }
 
 interface CourseContextType {
@@ -113,47 +116,69 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     
     let total = 0;
     let validTotal = 0;
+    let plannedTotal = 0;
     const categories: Record<string, number> = {};
     const validCategories: Record<string, number> = {};
+    const plannedCategories: Record<string, number> = {};
     let hasThresholdFailures = false;
+
+    let totalGradePoints = 0;
+    let totalCreditsWithGrades = 0;
 
     majorCourses.forEach(c => {
       // 1. Add to entered totals
       total += c.credits;
       categories[c.category] = (categories[c.category] || 0) + c.credits;
 
-      // 2. Determine if valid for degree completion
-      let isValid = true;
-      if (c.status === 'completed_with_grade') {
-        const minGrade = getMinGradeForRule(c.number);
-        if (c.grade !== undefined && c.grade !== null) {
-          isValid = c.grade >= minGrade;
-        } else {
-          isValid = false;
-        }
-      } else if (c.status === 'completed_without_grade') {
-        isValid = true;
-      } else {
-        // Fallback for older data without status
-        if (c.grade !== undefined && c.grade !== null) {
-          isValid = c.grade >= 60;
-        }
+      const hasGrade = c.grade !== undefined && c.grade !== null;
+
+      if (hasGrade) {
+        totalGradePoints += c.grade! * c.credits;
+        totalCreditsWithGrades += c.credits;
       }
 
-      if (isValid) {
+      // 2. Determine status (Valid vs Planned vs Failed)
+      if (c.status === 'completed_without_grade') {
         validTotal += c.credits;
         validCategories[c.category] = (validCategories[c.category] || 0) + c.credits;
+      } else if (c.status === 'completed_with_grade') {
+        if (!hasGrade) {
+          plannedTotal += c.credits;
+          plannedCategories[c.category] = (plannedCategories[c.category] || 0) + c.credits;
+        } else {
+          const minGrade = getMinGradeForRule(c.number);
+          if (c.grade! >= minGrade) {
+            validTotal += c.credits;
+            validCategories[c.category] = (validCategories[c.category] || 0) + c.credits;
+          } else {
+            hasThresholdFailures = true;
+          }
+        }
       } else {
-        hasThresholdFailures = true;
+        // Fallback for older data without status
+        if (!hasGrade) {
+          plannedTotal += c.credits;
+          plannedCategories[c.category] = (plannedCategories[c.category] || 0) + c.credits;
+        } else if (c.grade! >= 60) {
+          validTotal += c.credits;
+          validCategories[c.category] = (validCategories[c.category] || 0) + c.credits;
+        } else {
+          hasThresholdFailures = true;
+        }
       }
     });
     
+    const gpa = totalCreditsWithGrades > 0 ? totalGradePoints / totalCreditsWithGrades : null;
+
     return { 
       total, 
       categories, 
       validTotal, 
-      validCategories, 
-      hasThresholdFailures 
+      validCategories,
+      plannedTotal,
+      plannedCategories,
+      hasThresholdFailures,
+      gpa
     };
   }, [courses]);
 

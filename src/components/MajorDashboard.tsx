@@ -13,6 +13,8 @@ interface MajorDashboardProps {
     categories: Record<string, number>;
     validTotal: number;
     validCategories: Record<string, number>;
+    plannedTotal: number;
+    plannedCategories: Record<string, number>;
     hasThresholdFailures: boolean;
   };
   requirements: DegreeRequirement;
@@ -22,6 +24,7 @@ interface MajorDashboardProps {
 export function MajorDashboard({ title, stats, requirements, accentColor }: MajorDashboardProps) {
   const percentage = Math.min(100, Math.round((stats.total / requirements.total) * 100));
   const validPercentage = Math.min(100, Math.round((stats.validTotal / requirements.total) * 100));
+  const plannedPercentage = Math.min(100, Math.round(((stats.validTotal + stats.plannedTotal) / requirements.total) * 100));
   
   const accentHex = accentColor === "blue" ? "bg-blue-600" : "bg-emerald-600";
   const lightAccentHex = accentColor === "blue" ? "bg-blue-50/50" : "bg-emerald-50/50";
@@ -56,22 +59,45 @@ export function MajorDashboard({ title, stats, requirements, accentColor }: Majo
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-4">
           <div className="relative h-3 w-full bg-zinc-200/50 rounded-full overflow-hidden">
             {/* Valid credits bar (darker) */}
             <div 
-              className={cn("absolute top-0 right-0 h-full transition-all duration-500 z-10", accentHex)}
+              className={cn("absolute top-0 right-0 h-full transition-all duration-500 z-20", accentHex)}
               style={{ width: `${validPercentage}%` }}
             />
-            {/* Entered but invalid credits bar (lighter/opacity) */}
+            {/* Planned credits bar (gray) */}
+            <div 
+              className="absolute top-0 right-0 h-full transition-all duration-500 bg-zinc-400 z-10"
+              style={{ width: `${plannedPercentage}%` }}
+            />
+            {/* Entered bar (lighter/opacity) */}
             <div 
               className={cn("absolute top-0 right-0 h-full transition-all duration-500 opacity-30", accentHex)}
               style={{ width: `${percentage}%` }}
             />
           </div>
-          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-zinc-400">
-            <span>{percentage}%</span>
-            <span>{Math.max(0, requirements.total - stats.total)} נ&quot;ז נותרו</span>
+          
+          <div className="flex justify-between items-center">
+            <div className="flex gap-4">
+              <div className="flex items-center gap-1.5">
+                <div className={cn("w-2 h-2 rounded-full", accentHex)}></div>
+                <span className="text-[10px] font-bold text-zinc-500">הושלמו</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-zinc-400"></div>
+                <span className="text-[10px] font-bold text-zinc-500">מתוכננים (ללא ציון)</span>
+              </div>
+              {stats.hasThresholdFailures && (
+                <div className="flex items-center gap-1.5">
+                  <div className={cn("w-2 h-2 rounded-full opacity-30", accentHex)}></div>
+                  <span className="text-[10px] font-bold text-zinc-500">מתחת לסף</span>
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-zinc-400">
+              <span>{Math.max(0, requirements.total - stats.total)} נ&quot;ז נותרו</span>
+            </div>
           </div>
         </div>
         
@@ -95,9 +121,13 @@ export function MajorDashboard({ title, stats, requirements, accentColor }: Majo
         {requirements.categories.map((cat) => {
           const completed = stats.categories[cat.key] || 0;
           const validCompleted = stats.validCategories[cat.key] || 0;
-          const hasFailureInCat = validCompleted < completed;
+          const plannedCompleted = stats.plannedCategories[cat.key] || 0;
+          const hasFailureInCat = (validCompleted + plannedCompleted) < completed;
           
           const catPercentage = Math.min(100, Math.round((completed / cat.required) * 100));
+          const validCatPercentage = Math.min(100, Math.round((validCompleted / cat.required) * 100));
+          const plannedCatPercentage = Math.min(100, Math.round(((validCompleted + plannedCompleted) / cat.required) * 100));
+          
           const isValidDone = validCompleted >= cat.required;
           const isEnteredDone = completed >= cat.required;
           const isStarted = completed > 0;
@@ -132,13 +162,20 @@ export function MajorDashboard({ title, stats, requirements, accentColor }: Majo
                 </div>
               </div>
               <div className="relative h-1.5 w-full bg-zinc-50 rounded-full overflow-hidden">
+                {/* Valid bar */}
                 <div 
                   className={cn(
-                    "absolute top-0 right-0 h-full transition-all duration-500",
+                    "absolute top-0 right-0 h-full transition-all duration-500 z-20",
                     isValidDone ? "bg-emerald-500" : hasFailureInCat ? "bg-amber-500" : "bg-orange-400"
                   )}
-                  style={{ width: `${Math.min(100, Math.round((validCompleted / cat.required) * 100))}%` }}
+                  style={{ width: `${validCatPercentage}%` }}
                 />
+                {/* Planned bar */}
+                <div 
+                  className="absolute top-0 right-0 h-full transition-all duration-500 bg-zinc-300 z-10"
+                  style={{ width: `${plannedCatPercentage}%` }}
+                />
+                {/* Total bar */}
                 <div 
                   className={cn(
                     "absolute top-0 right-0 h-full transition-all duration-500 opacity-30",
@@ -152,6 +189,11 @@ export function MajorDashboard({ title, stats, requirements, accentColor }: Majo
                   מכיל קורסים מתחת לסף (רק {validCompleted} נ&quot;ז תקפות)
                 </p>
               )}
+              {plannedCompleted > 0 && (
+                <p className="text-[9px] font-bold text-zinc-400 mt-0.5">
+                  כולל {plannedCompleted} נ&quot;ז בתכנון
+                </p>
+              )}
             </div>
           );
         })}
@@ -159,4 +201,5 @@ export function MajorDashboard({ title, stats, requirements, accentColor }: Majo
     </Card>
   );
 }
+
 

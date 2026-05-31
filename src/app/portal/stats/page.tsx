@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/utils";
 
 export default function StatsPage() {
-  const { econStats, bizStats, evaluation } = useCourses();
+  const { courses, econStats, bizStats, evaluation } = useCourses();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const totalCredits = econStats.total + bizStats.total;
@@ -22,6 +22,12 @@ export default function StatsPage() {
   const totalPercentage = Math.round((totalCredits / targetCredits) * 100);
   
   const hasAnyThresholdFailures = econStats.hasThresholdFailures || bizStats.hasThresholdFailures;
+
+  // Calculate Global Weighted Average (GPA)
+  const gradedCourses = courses.filter(c => c.grade !== undefined && c.grade !== null && c.status !== 'not_completed');
+  const totalGradePoints = gradedCourses.reduce((sum, c) => sum + (c.grade! * c.credits), 0);
+  const totalGradedCredits = gradedCourses.reduce((sum, c) => sum + c.credits, 0);
+  const globalGPA = totalGradedCredits > 0 ? (totalGradePoints / totalGradedCredits).toFixed(2) : null;
 
   return (
     <div className="space-y-12 pb-20">
@@ -164,7 +170,7 @@ export default function StatsPage() {
         />
         <StatCard 
           label="ממוצע משוקלל" 
-          value="--" 
+          value={globalGPA || "אין ציונים"} 
           icon={<BookOpen size={28} />}
           color="purple"
         />
