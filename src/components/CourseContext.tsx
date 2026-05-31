@@ -8,6 +8,9 @@ import requirementRules from "@/data/requirementRules.json";
 interface Stats {
   total: number;
   categories: Record<string, number>;
+  validTotal: number;
+  validCategories: Record<string, number>;
+  hasThresholdFailures: boolean;
 }
 
 interface CourseContextType {
@@ -106,41 +109,52 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   };
 
   const calculateStats = useCallback((major: Major): Stats => {
-    // Only count credits for courses that are completed (with or without grade) and not failed
-    const majorCourses = courses.filter(c => {
-      if (c.major !== major) return false;
-      
-      // 1. If status = "not_completed" → do not count credits
-      if (c.status === 'not_completed') return false;
+    const majorCourses = courses.filter(c => c.major === major && c.status !== 'not_completed');
+    
+    let total = 0;
+    let validTotal = 0;
+    const categories: Record<string, number> = {};
+    const validCategories: Record<string, number> = {};
+    let hasThresholdFailures = false;
 
-      // 2. If status = "completed_without_grade" → assume passed, count credits
-      if (c.status === 'completed_without_grade') return true;
+    majorCourses.forEach(c => {
+      // 1. Add to entered totals
+      total += c.credits;
+      categories[c.category] = (categories[c.category] || 0) + c.credits;
 
-      // 3. If status = "completed_with_grade":
+      // 2. Determine if valid for degree completion
+      let isValid = true;
       if (c.status === 'completed_with_grade') {
         const minGrade = getMinGradeForRule(c.number);
-        // If grade < minimumGrade → do not count credits
         if (c.grade !== undefined && c.grade !== null) {
-            return c.grade >= minGrade;
+          isValid = c.grade >= minGrade;
+        } else {
+          isValid = false;
         }
-        return false; // Missing grade in "completed_with_grade" status
+      } else if (c.status === 'completed_without_grade') {
+        isValid = true;
+      } else {
+        // Fallback for older data without status
+        if (c.grade !== undefined && c.grade !== null) {
+          isValid = c.grade >= 60;
+        }
       }
-      
-      // Fallback for older data without status
-      if (c.grade !== undefined && c.grade !== null) {
-          return c.grade >= 60;
-      }
-      
-      return true; // Default to counting if added but no clear fail
-    });
 
-    const total = majorCourses.reduce((sum, c) => sum + c.credits, 0);
-    const categories = majorCourses.reduce((acc, c) => {
-      acc[c.category] = (acc[c.category] || 0) + c.credits;
-      return acc;
-    }, {} as Record<string, number>);
+      if (isValid) {
+        validTotal += c.credits;
+        validCategories[c.category] = (validCategories[c.category] || 0) + c.credits;
+      } else {
+        hasThresholdFailures = true;
+      }
+    });
     
-    return { total, categories };
+    return { 
+      total, 
+      categories, 
+      validTotal, 
+      validCategories, 
+      hasThresholdFailures 
+    };
   }, [courses]);
 
   const econStats = useMemo(() => calculateStats('Economics'), [calculateStats]);

@@ -17,8 +17,11 @@ export default function StatsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const totalCredits = econStats.total + bizStats.total;
+  const validTotalCredits = econStats.validTotal + bizStats.validTotal;
   const targetCredits = ECONOMICS_REQUIREMENTS.total + BUSINESS_REQUIREMENTS.total;
   const totalPercentage = Math.round((totalCredits / targetCredits) * 100);
+  
+  const hasAnyThresholdFailures = econStats.hasThresholdFailures || bizStats.hasThresholdFailures;
 
   return (
     <div className="space-y-12 pb-20">
@@ -31,6 +34,22 @@ export default function StatsPage() {
           הוספת קורס חדש
         </Button>
       </PageHeader>
+
+      {/* Global Warning for Threshold Failures */}
+      {hasAnyThresholdFailures && (
+        <div className="bg-amber-50 border border-amber-100 rounded-[2rem] p-6 flex flex-col md:flex-row items-center gap-6 shadow-sm">
+          <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+            <AlertCircle size={32} />
+          </div>
+          <div className="flex-1 space-y-1 text-center md:text-right">
+            <h4 className="text-lg font-black text-amber-900">ישנם קורסים שאינם עומדים בציון הסף</h4>
+            <p className="text-amber-700 font-medium text-sm">
+              חלק מהקורסים שהזנת נספרים בסיכום הנ&quot;ז הכללי, אך לא יחשבו לצורך השלמת התואר כיוון שציונם נמוך מהנדרש. 
+              בסך הכל יש לך <strong>{validTotalCredits}</strong> נ&quot;ז תקפות מתוך {totalCredits} שהוזנו.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Evaluation Summary */}
       {evaluation && (
