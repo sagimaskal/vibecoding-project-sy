@@ -112,7 +112,7 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   };
 
   const calculateStats = useCallback((major: Major): Stats => {
-    const majorCourses = courses.filter(c => c.major === major && c.status !== 'not_completed');
+    const majorCourses = courses.filter(c => c.major === major);
     
     let total = 0;
     let validTotal = 0;
@@ -132,30 +132,33 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
 
       const hasGrade = c.grade !== undefined && c.grade !== null;
 
-      if (hasGrade) {
+      // GPA calculation includes all courses with grades (even failed ones, per formula sum(grade*credits)/sum(credits))
+      if (hasGrade && c.credits > 0) {
         totalGradePoints += c.grade! * c.credits;
         totalCreditsWithGrades += c.credits;
       }
 
       // 2. Determine status (Valid vs Planned vs Failed)
-      if (c.status === 'completed_without_grade') {
+      
+      // A course is "Planned" if it's explicitly not completed OR if it's completed with grade but has no grade yet
+      const isPlanned = c.status === 'not_completed' || (c.status === 'completed_with_grade' && !hasGrade);
+
+      if (isPlanned) {
+        plannedTotal += c.credits;
+        plannedCategories[c.category] = (plannedCategories[c.category] || 0) + c.credits;
+      } else if (c.status === 'completed_without_grade') {
         validTotal += c.credits;
         validCategories[c.category] = (validCategories[c.category] || 0) + c.credits;
-      } else if (c.status === 'completed_with_grade') {
-        if (!hasGrade) {
-          plannedTotal += c.credits;
-          plannedCategories[c.category] = (plannedCategories[c.category] || 0) + c.credits;
+      } else if (c.status === 'completed_with_grade' && hasGrade) {
+        const minGrade = getMinGradeForRule(c.number);
+        if (c.grade! >= minGrade) {
+          validTotal += c.credits;
+          validCategories[c.category] = (validCategories[c.category] || 0) + c.credits;
         } else {
-          const minGrade = getMinGradeForRule(c.number);
-          if (c.grade! >= minGrade) {
-            validTotal += c.credits;
-            validCategories[c.category] = (validCategories[c.category] || 0) + c.credits;
-          } else {
-            hasThresholdFailures = true;
-          }
+          hasThresholdFailures = true;
         }
       } else {
-        // Fallback for older data without status
+        // Fallback for older data or edge cases
         if (!hasGrade) {
           plannedTotal += c.credits;
           plannedCategories[c.category] = (plannedCategories[c.category] || 0) + c.credits;
