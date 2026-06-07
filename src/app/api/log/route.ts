@@ -2,39 +2,64 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * API route for receiving logs and forwarding them to Google Apps Script.
+ * Acting as a proxy to avoid CORS issues and hide the webhook URL.
  */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { type, data } = body;
+    const { logType } = body;
 
-    // 1. Log to console for development and fallback
-    console.log(`[LOG:${type.toUpperCase()}]`, JSON.stringify(data, null, 2));
-
-    // 2. Google Apps Script Webhook Integration
-    const webhookUrl = process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL;
-
-    if (webhookUrl) {
-      try {
-        // Forward the log to the Google Apps Script Web App
-        // We don't await this if we want to return the response to the client faster,
-        // but since we want to handle failures/logging, we await it here.
-        const response = await fetch(webhookUrl, {
-          method: 'POST',
-          body: JSON.stringify(body),
-        });
-
-        if (!response.ok) {
-          console.error(`Apps Script Webhook returned status: ${response.status}`);
-        }
-      } catch (err) {
-        console.error('Error forwarding to Apps Script Webhook:', err);
-      }
+    // Validate log type
+    if (logType !== 'event' && logType !== 'mouse') {
+      return NextResponse.json({ success: false, error: 'Invalid log type' }, { status: 400 });
     }
 
-    return NextResponse.json({ success: true });
+    // 1. Log to server-side console (Vercel)
+    console.log(`[LOG:${logType.toUpperCase()}]`, JSON.stringify(body, null, 2));
+
+    // 2. Forward to Google Apps Script
+    const webhookUrl = process.env.LOGGING_WEBHOOK_URL;
+
+    if (!webhookUrl) {
+      console.warn("[LOG:SERVER] LOGGING_WEBHOOK_URL is missing in environment variables.");
+      return NextResponse.json({ success: false, error: 'Server configuration error: missing webhook URL' });
+    }
+
+    try {
+      // Forward exactly what we received
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      const appsScriptText = await response.text();
+      
+      if (response.ok) {
+        return NextResponse.json({ 
+          success: true, 
+          appsScriptResponse: appsScriptText 
+        });
+      } else {
+        console.error(`[LOG:SERVER] Apps Script error: ${response.status}`, appsScriptText);
+        return NextResponse.json({ 
+          success: false, 
+          error: `Apps Script error: ${response.status}`,
+          details: appsScriptText
+        });
+      }
+    } catch (err) {
+      console.error('[LOG:SERVER] Failed to fetch Apps Script:', err);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Failed to connect to Google Apps Script',
+        details: err instanceof Error ? err.message : String(err)
+      });
+    }
   } catch (error) {
-    console.error('Logging API error:', error);
+    console.error('[LOG:SERVER] API route error:', error);
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }

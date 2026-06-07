@@ -4,7 +4,6 @@
  */
 
 console.log("[LOG:LOGGER_LOADED]");
-console.log("[LOG:WEBHOOK_URL_EXISTS]", Boolean(process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL));
 
 export type EventType = 
   | 'app_opened'
@@ -21,9 +20,10 @@ export type EventType =
   | 'signup';
 
 export interface LogPayload {
+  logType: 'event';
   timestamp: string;
   sessionId: string;
-  userId?: string;
+  userId: string;
   pagePath: string;
   eventType: EventType;
   submittedData?: unknown;
@@ -33,9 +33,10 @@ export interface LogPayload {
 }
 
 export interface MouseLogPayload {
+  logType: 'mouse';
   timestamp: string;
   sessionId: string;
-  userId?: string;
+  userId: string;
   pagePath: string;
   x: number;
   y: number;
@@ -70,7 +71,7 @@ const getUserId = (): string => {
 };
 
 /**
- * Logs an event to the backend and Apps Script Webhook.
+ * Logs an event to the backend API proxy.
  */
 export const logEvent = async (
   eventType: EventType, 
@@ -80,59 +81,45 @@ export const logEvent = async (
   errorMessage?: string
 ) => {
   const payload: LogPayload = {
+    logType: 'event',
     timestamp: new Date().toISOString(),
     sessionId: getSessionId(),
     userId: getUserId(),
     pagePath: typeof window !== 'undefined' ? window.location.pathname : '',
     eventType,
-    submittedData,
-    appResult,
+    submittedData: submittedData || {},
+    appResult: appResult || {},
     status,
-    errorMessage
+    errorMessage: errorMessage || ''
   };
 
-  // 1. Console Fallback
-  console.log(`[LOG:EVENT:${eventType.toUpperCase()}]`, payload);
   console.log("[LOG:SENDING]", payload);
 
-  // 2. Local Backend Log (for Vercel logs)
   try {
-    fetch('/api/log', {
+    const response = await fetch('/api/log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'event', data: payload }),
+      body: JSON.stringify(payload),
     });
-  } catch (e) {
-    // Ignore backend errors
-  }
 
-  // 3. Direct Apps Script Webhook
-  const webhookUrl = process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL;
-  if (!webhookUrl) {
-    console.warn("[LOG:MISSING_WEBHOOK_URL]");
-    return;
-  }
-
-  try {
-    await fetch(webhookUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-      body: JSON.stringify({ type: 'event', data: payload }),
-    });
-    console.log("[LOG:SENT:SUCCESS]");
+    const result = await response.json();
+    
+    if (result.success) {
+      console.log("[LOG:SENT:SUCCESS]");
+    } else {
+      console.error("[LOG:WEBHOOK_FAILED]", result.error);
+    }
   } catch (error) {
-    console.error("[LOG:WEBHOOK_FAILED]", error);
+    console.error("[LOG:API_ROUTE_FAILED]", error);
   }
 };
 
 /**
- * Logs mouse movement to the backend and Apps Script Webhook.
+ * Logs mouse movement to the backend API proxy.
  */
 export const logMouseMovement = async (data: { x: number, y: number, viewportWidth: number, viewportHeight: number }) => {
   const payload: MouseLogPayload = {
+    logType: 'mouse',
     timestamp: new Date().toISOString(),
     sessionId: getSessionId(),
     userId: getUserId(),
@@ -140,23 +127,13 @@ export const logMouseMovement = async (data: { x: number, y: number, viewportWid
     ...data
   };
 
-  // 1. Console Fallback
-  // console.log("[LOG:MOUSE]", payload); // Keep mouse logs commented out by default to avoid noise, but can be enabled for debug
-
-  // 3. Direct Apps Script Webhook
-  const webhookUrl = process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL;
-  if (!webhookUrl) return;
-
   try {
-    await fetch(webhookUrl, {
+    fetch('/api/log', {
       method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-      body: JSON.stringify({ type: 'mouse', data: payload }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
-    // For mouse, we don't log success every 500ms to avoid flooding
+    // We don't log every mouse movement to console to avoid clutter
   } catch (error) {
     // Fail silently for mouse movements
   }
