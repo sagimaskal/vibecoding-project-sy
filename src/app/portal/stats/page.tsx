@@ -11,6 +11,8 @@ import { AddCourseModal } from "@/components/AddCourseModal";
 import { Award, Target, BookOpen, Clock, Plus, AlertCircle, Check, ShieldCheck } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
+import { logEvent } from "@/lib/logger";
 
 export default function StatsPage() {
   const { courses, econStats, bizStats, evaluation } = useCourses();
@@ -28,6 +30,18 @@ export default function StatsPage() {
   const totalGradePoints = gradedCourses.reduce((sum, c) => sum + (c.grade! * c.credits), 0);
   const totalGradedCredits = gradedCourses.reduce((sum, c) => sum + c.credits, 0);
   const globalGPA = totalGradedCredits > 0 ? (totalGradePoints / totalGradedCredits).toFixed(2) : null;
+
+  useEffect(() => {
+    logEvent('dashboard_viewed');
+    if (globalGPA) {
+      logEvent('weighted_average_calculated', undefined, { gpa: globalGPA });
+    }
+    logEvent('progress_overview_calculated', undefined, { 
+      totalCredits, 
+      validTotalCredits, 
+      totalPercentage 
+    });
+  }, [totalCredits, globalGPA]);
 
   return (
     <div className="space-y-12 pb-20">

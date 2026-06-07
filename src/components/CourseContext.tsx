@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useCall
 import { Course, Major } from "@/lib/types";
 import { evaluateRequirements, EvaluationResult } from "@/utils/requirementEvaluator";
 import requirementRules from "@/data/requirementRules.json";
+import { logEvent } from "@/lib/logger";
 
 interface Stats {
   total: number;
@@ -198,7 +199,9 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   const addCourse = useCallback((courseData: Omit<Course, "id">) => {
     const isDuplicate = courses.some((c) => c.number === courseData.number);
     if (isDuplicate) {
-      alert("קורס זה כבר הוזן למערכת ולא ניתן לספור אותו פעמיים");
+      const msg = "קורס זה כבר הוזן למערכת ולא ניתן לספור אותו פעמיים";
+      alert(msg);
+      logEvent('validation_error', courseData, undefined, 'failure', msg);
       return false;
     }
     
@@ -211,13 +214,7 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
       id
     };
     
-    console.log("Adding Course:", {
-        id: newCourse.id,
-        course_id: newCourse.number,
-        name: newCourse.name,
-        grade: newCourse.grade,
-        credits: newCourse.credits
-    });
+    logEvent('course_added', newCourse, { success: true });
 
     setCourses(prev => [...prev, newCourse]);
     return true;
@@ -226,8 +223,9 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   const updateCourse = useCallback((id: string, updatedFields: Partial<Course>) => {
     const courseExists = courses.some(c => c.id === id);
     if (!courseExists) {
-      console.error(`Course with ID ${id} not found for update`);
-      alert("שגיאה: הקורס לא נמצא במערכת.");
+      const msg = "שגיאה: הקורס לא נמצא במערכת.";
+      alert(msg);
+      logEvent('validation_error', { id, updatedFields }, undefined, 'error', msg);
       return false;
     }
 
@@ -236,23 +234,31 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
         (c) => c.number === updatedFields.number && c.id !== id
       );
       if (isDuplicate) {
-        alert("מספר קורס זה כבר קיים במערכת");
+        const msg = "מספר קורס זה כבר קיים במערכת";
+        alert(msg);
+        logEvent('validation_error', updatedFields, undefined, 'failure', msg);
         return false;
       }
     }
+
+    const oldCourse = courses.find(c => c.id === id);
+    logEvent('course_edited', { id, updatedFields }, { oldCourse });
 
     setCourses(prev => prev.map((c) => (c.id === id ? { ...c, ...updatedFields } : c)));
     return true;
   }, [courses]);
 
   const deleteCourse = useCallback((id: string) => {
+    const courseToDelete = courses.find(c => c.id === id);
     if (confirm("האם אתה בטוח שברצונך למחוק קורס זה?")) {
+      logEvent('course_deleted', { id, courseToDelete }, { success: true });
       setCourses(prev => prev.filter((c) => c.id !== id));
     }
-  }, []);
+  }, [courses]);
 
   const resetData = useCallback(() => {
     if (confirm("האם אתה בטוח שברצונך למחוק את כל הנתונים?")) {
+      logEvent('data_reset', undefined, { success: true });
       setCourses([]);
       setUserNameInternal("");
       setUserEmailInternal("");

@@ -8,6 +8,7 @@ import { Button } from "./ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { X, Check, Search, AlertCircle, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { logEvent } from "@/lib/logger";
 import courseCatalog from "@/data/courseCatalog.json";
 import requirementRules from "@/data/requirementRules.json";
 
@@ -122,14 +123,18 @@ export function AddCourseModal({ isOpen, onClose, editingCourse }: AddCourseModa
     e.preventDefault();
 
     if (!number) {
-        alert("נא לבחור קורס מהשנתון");
+        const msg = "נא לבחור קורס מהשנתון";
+        alert(msg);
+        logEvent('validation_error', { name, number }, undefined, 'failure', msg);
         return;
     }
 
     let numericGrade: number | undefined = undefined;
     if (status === "completed_with_grade") {
         if (!grade) {
-            alert("נא להזין ציון");
+            const msg = "נא להזין ציון";
+            alert(msg);
+            logEvent('validation_error', { name, number, status }, undefined, 'failure', msg);
             return;
         }
         numericGrade = parseInt(grade);

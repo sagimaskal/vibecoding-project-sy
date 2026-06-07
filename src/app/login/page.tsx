@@ -6,6 +6,7 @@ import { useCourses } from "@/components/CourseContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { GraduationCap, ArrowRight, User, Mail } from "lucide-react";
+import { logEvent } from "@/lib/logger";
 
 export default function LoginPage() {
   const [name, setName] = useState("");
@@ -16,6 +17,7 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (name && email) {
+      logEvent('login', { name: '***', email: '***' }); // Privacy: don't log names/emails directly
       setUserName(name);
       setUserEmail(email);
       router.push("/setup");

@@ -59,4 +59,8 @@ At the end of each task, report:
 - What was not changed
 - Any **NEEDS PRD DECISION** items
 
-STATUS: OPERATIONAL
+## 10. Logging Mandate
+- **Event Logging**: All significant user actions (add/edit/delete course, viewing dashboard, validation errors) must be logged via `logEvent` in `src/lib/logger.ts`.
+- **Mouse Tracking**: Mouse movements must be tracked via `MouseMovementLogger` component (500ms throttle).
+- **Privacy**: Never log passwords or raw personal identifiers. Use the hashing provided in the logger utility.
+- **Backend**: Logs are sent to `/api/log`. Google Sheets integration is preferred if environment variables are provided.
