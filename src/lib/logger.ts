@@ -3,6 +3,9 @@
  * Handles event logging and mouse movement tracking.
  */
 
+console.log("[LOG:LOGGER_LOADED]");
+console.log("[LOG:WEBHOOK_URL_EXISTS]", Boolean(process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL));
+
 export type EventType = 
   | 'app_opened'
   | 'dashboard_viewed'
@@ -90,6 +93,7 @@ export const logEvent = async (
 
   // 1. Console Fallback
   console.log(`[LOG:EVENT:${eventType.toUpperCase()}]`, payload);
+  console.log("[LOG:SENDING]", payload);
 
   // 2. Local Backend Log (for Vercel logs)
   try {
@@ -99,29 +103,28 @@ export const logEvent = async (
       body: JSON.stringify({ type: 'event', data: payload }),
     });
   } catch (e) {
-    // Ignore backend errors to prevent app crashes
+    // Ignore backend errors
   }
 
-  // 3. Direct Apps Script Webhook (for reliability/CORS bypass)
+  // 3. Direct Apps Script Webhook
   const webhookUrl = process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL;
   if (!webhookUrl) {
-    console.warn("[LOG:MISSING_WEBHOOK_URL] NEXT_PUBLIC_LOGGING_WEBHOOK_URL is not defined.");
+    console.warn("[LOG:MISSING_WEBHOOK_URL]");
     return;
   }
 
-  console.log(`[LOG:SENDING:EVENT] to ${webhookUrl}`);
   try {
     await fetch(webhookUrl, {
       method: 'POST',
-      mode: 'no-cors', // Critical for Google Apps Script anonymous posting
+      mode: 'no-cors',
       headers: {
-        'Content-Type': 'text/plain', // Prevents CORS preflight which Google Scripts don't handle well
+        'Content-Type': 'text/plain',
       },
       body: JSON.stringify({ type: 'event', data: payload }),
     });
-    console.log("[LOG:SENT:SUCCESS] Event logged to Apps Script.");
+    console.log("[LOG:SENT:SUCCESS]");
   } catch (error) {
-    console.error("[LOG:WEBHOOK_FAILED] Error sending event to Apps Script:", error);
+    console.error("[LOG:WEBHOOK_FAILED]", error);
   }
 };
 
@@ -137,14 +140,8 @@ export const logMouseMovement = async (data: { x: number, y: number, viewportWid
     ...data
   };
 
-  // 2. Local Backend Log (for Vercel logs)
-  try {
-    fetch('/api/log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'mouse', data: payload }),
-    });
-  } catch (e) { /* ignore */ }
+  // 1. Console Fallback
+  // console.log("[LOG:MOUSE]", payload); // Keep mouse logs commented out by default to avoid noise, but can be enabled for debug
 
   // 3. Direct Apps Script Webhook
   const webhookUrl = process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL;
@@ -159,6 +156,7 @@ export const logMouseMovement = async (data: { x: number, y: number, viewportWid
       },
       body: JSON.stringify({ type: 'mouse', data: payload }),
     });
+    // For mouse, we don't log success every 500ms to avoid flooding
   } catch (error) {
     // Fail silently for mouse movements
   }
