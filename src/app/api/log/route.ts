@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { google } from 'googleapis';
+
 /**
  * API route for receiving logs and sending them to Google Sheets or Console.
  */
@@ -12,33 +14,21 @@ export async function POST(req: NextRequest) {
     console.log(`[LOG:${type.toUpperCase()}]`, JSON.stringify(data, null, 2));
 
     // 2. Google Sheets Integration
-    // To enable this, set the following environment variables:
-    // GOOGLE_SHEETS_CLIENT_EMAIL
-    // GOOGLE_SHEETS_PRIVATE_KEY
-    // GOOGLE_SHEETS_SPREADSHEET_ID
-    
     const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
     const clientEmail = process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
     const privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY;
 
     if (spreadsheetId && clientEmail && privateKey) {
       try {
-        // Since we want to avoid complex dependencies if possible, 
-        // but Google Sheets API requires JWT auth, we would ideally use 'google-auth-library'.
-        // For now, we provide the implementation structure.
-        
-        const sheetName = type === 'event' ? 'event_logs' : 'mouse_logs';
-        
-        // Note: In a real implementation with googleapis package:
-        /*
-        const { google } = require('googleapis');
         const auth = new google.auth.JWT(
           clientEmail,
-          null,
+          undefined,
           privateKey.replace(/\\n/g, '\n'),
           ['https://www.googleapis.com/auth/spreadsheets']
         );
+
         const sheets = google.sheets({ version: 'v4', auth });
+        const sheetName = type === 'event' ? 'event_logs' : 'mouse_logs';
         
         const values = type === 'event' ? [
           data.timestamp,
@@ -46,10 +36,10 @@ export async function POST(req: NextRequest) {
           data.userId,
           data.pagePath,
           data.eventType,
-          JSON.stringify(data.submittedData),
-          JSON.stringify(data.appResult),
+          JSON.stringify(data.submittedData || {}),
+          JSON.stringify(data.appResult || {}),
           data.status,
-          data.errorMessage
+          data.errorMessage || ''
         ] : [
           data.timestamp,
           data.sessionId,
@@ -65,15 +55,17 @@ export async function POST(req: NextRequest) {
           spreadsheetId,
           range: `${sheetName}!A:Z`,
           valueInputOption: 'USER_ENTERED',
-          requestBody: { values: [values] },
+          requestBody: {
+            values: [values],
+          },
         });
-        */
-        
-        // If the user hasn't installed googleapis yet, we've fulfilled the "clean abstraction" requirement.
-        // We can suggest installing it if they want to move beyond console logs.
       } catch (err) {
         console.error('Error appending to Google Sheets:', err);
+        // Backup console log already happened, so we just log the failure here
       }
+    } else {
+      // Optional: log that sheets integration is skipped due to missing env vars
+      // console.log('Google Sheets integration skipped: Missing environment variables');
     }
 
     return NextResponse.json({ success: true });

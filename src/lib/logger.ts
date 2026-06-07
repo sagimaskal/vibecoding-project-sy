@@ -23,8 +23,8 @@ export interface LogPayload {
   userId?: string;
   pagePath: string;
   eventType: EventType;
-  submittedData?: any;
-  appResult?: any;
+  submittedData?: unknown;
+  appResult?: unknown;
   status: 'success' | 'failure' | 'error';
   errorMessage?: string;
 }
@@ -71,8 +71,8 @@ const getUserId = (): string => {
  */
 export const logEvent = async (
   eventType: EventType, 
-  submittedData?: any, 
-  appResult?: any, 
+  submittedData?: unknown, 
+  appResult?: unknown, 
   status: 'success' | 'failure' | 'error' = 'success',
   errorMessage?: string
 ) => {
