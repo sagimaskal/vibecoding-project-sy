@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { google } from 'googleapis';
-
 /**
- * API route for receiving logs and sending them to Google Sheets or Console.
+ * API route for receiving logs and forwarding them to Google Apps Script.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -13,59 +11,25 @@ export async function POST(req: NextRequest) {
     // 1. Log to console for development and fallback
     console.log(`[LOG:${type.toUpperCase()}]`, JSON.stringify(data, null, 2));
 
-    // 2. Google Sheets Integration
-    const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
-    const clientEmail = process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
-    const privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY;
+    // 2. Google Apps Script Webhook Integration
+    const webhookUrl = process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL;
 
-    if (spreadsheetId && clientEmail && privateKey) {
+    if (webhookUrl) {
       try {
-        const auth = new google.auth.JWT(
-          clientEmail,
-          undefined,
-          privateKey.replace(/\\n/g, '\n'),
-          ['https://www.googleapis.com/auth/spreadsheets']
-        );
-
-        const sheets = google.sheets({ version: 'v4', auth });
-        const sheetName = type === 'event' ? 'event_logs' : 'mouse_logs';
-        
-        const values = type === 'event' ? [
-          data.timestamp,
-          data.sessionId,
-          data.userId,
-          data.pagePath,
-          data.eventType,
-          JSON.stringify(data.submittedData || {}),
-          JSON.stringify(data.appResult || {}),
-          data.status,
-          data.errorMessage || ''
-        ] : [
-          data.timestamp,
-          data.sessionId,
-          data.userId,
-          data.pagePath,
-          data.x,
-          data.y,
-          data.viewportWidth,
-          data.viewportHeight
-        ];
-
-        await sheets.spreadsheets.values.append({
-          spreadsheetId,
-          range: `${sheetName}!A:Z`,
-          valueInputOption: 'USER_ENTERED',
-          requestBody: {
-            values: [values],
-          },
+        // Forward the log to the Google Apps Script Web App
+        // We don't await this if we want to return the response to the client faster,
+        // but since we want to handle failures/logging, we await it here.
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          body: JSON.stringify(body),
         });
+
+        if (!response.ok) {
+          console.error(`Apps Script Webhook returned status: ${response.status}`);
+        }
       } catch (err) {
-        console.error('Error appending to Google Sheets:', err);
-        // Backup console log already happened, so we just log the failure here
+        console.error('Error forwarding to Apps Script Webhook:', err);
       }
-    } else {
-      // Optional: log that sheets integration is skipped due to missing env vars
-      // console.log('Google Sheets integration skipped: Missing environment variables');
     }
 
     return NextResponse.json({ success: true });
