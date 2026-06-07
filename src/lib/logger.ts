@@ -67,7 +67,7 @@ const getUserId = (): string => {
 };
 
 /**
- * Logs an event to the backend.
+ * Logs an event to the backend and Apps Script Webhook.
  */
 export const logEvent = async (
   eventType: EventType, 
@@ -88,19 +88,45 @@ export const logEvent = async (
     errorMessage
   };
 
+  // 1. Console Fallback
+  console.log(`[LOG:EVENT:${eventType.toUpperCase()}]`, payload);
+
+  // 2. Local Backend Log (for Vercel logs)
   try {
-    await fetch('/api/log', {
+    fetch('/api/log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'event', data: payload }),
     });
+  } catch (e) {
+    // Ignore backend errors to prevent app crashes
+  }
+
+  // 3. Direct Apps Script Webhook (for reliability/CORS bypass)
+  const webhookUrl = process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL;
+  if (!webhookUrl) {
+    console.warn("[LOG:MISSING_WEBHOOK_URL] NEXT_PUBLIC_LOGGING_WEBHOOK_URL is not defined.");
+    return;
+  }
+
+  console.log(`[LOG:SENDING:EVENT] to ${webhookUrl}`);
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      mode: 'no-cors', // Critical for Google Apps Script anonymous posting
+      headers: {
+        'Content-Type': 'text/plain', // Prevents CORS preflight which Google Scripts don't handle well
+      },
+      body: JSON.stringify({ type: 'event', data: payload }),
+    });
+    console.log("[LOG:SENT:SUCCESS] Event logged to Apps Script.");
   } catch (error) {
-    console.error('Failed to log event:', error);
+    console.error("[LOG:WEBHOOK_FAILED] Error sending event to Apps Script:", error);
   }
 };
 
 /**
- * Logs mouse movement to the backend.
+ * Logs mouse movement to the backend and Apps Script Webhook.
  */
 export const logMouseMovement = async (data: { x: number, y: number, viewportWidth: number, viewportHeight: number }) => {
   const payload: MouseLogPayload = {
@@ -111,13 +137,29 @@ export const logMouseMovement = async (data: { x: number, y: number, viewportWid
     ...data
   };
 
+  // 2. Local Backend Log (for Vercel logs)
   try {
-    await fetch('/api/log', {
+    fetch('/api/log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'mouse', data: payload }),
     });
+  } catch (e) { /* ignore */ }
+
+  // 3. Direct Apps Script Webhook
+  const webhookUrl = process.env.NEXT_PUBLIC_LOGGING_WEBHOOK_URL;
+  if (!webhookUrl) return;
+
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      body: JSON.stringify({ type: 'mouse', data: payload }),
+    });
   } catch (error) {
-    // Fail silently for mouse movements to avoid spamming console
+    // Fail silently for mouse movements
   }
 };
