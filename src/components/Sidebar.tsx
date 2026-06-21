@@ -13,10 +13,12 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/Button";
+import { useAuth } from "./providers/AuthProvider";
 
 export function Sidebar() {
   const pathname = usePathname();
   const { userName, resetData } = useCourses();
+const { signOut } = useAuth();
 
   const navItems = [
     { name: "מבט על", href: "/portal/stats", icon: LayoutDashboard },
@@ -74,15 +76,14 @@ export function Sidebar() {
           <RefreshCcw size={16} />
           איפוס נתונים
         </Button>
-        <Link href="/">
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-3 text-zinc-400 hover:text-zinc-900 px-5"
-          >
-            <LogOut size={16} />
-            יציאה
-          </Button>
-        </Link>
+        <Button
+  variant="ghost"
+  onClick={signOut}
+  className="w-full justify-start gap-3 text-zinc-400 hover:text-zinc-900 px-5"
+>
+  <LogOut size={16} />
+ יציאה
+</Button>
       </div>
     </aside>
   );

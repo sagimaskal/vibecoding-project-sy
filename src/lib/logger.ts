@@ -1,7 +1,9 @@
 /**
  * Logging utility for HUJI Degree Tracker.
- * Handles event logging and mouse movement tracking.
+ * Handles event logging and mouse movement tracking via Supabase.
  */
+
+import { supabase } from './supabase';
 
 console.log("[LOG:LOGGER_LOADED]");
 
@@ -19,31 +21,6 @@ export type EventType =
   | 'login'
   | 'signup';
 
-export interface LogPayload {
-  logType: 'event';
-  timestamp: string;
-  sessionId: string;
-  userId: string;
-  pagePath: string;
-  eventType: EventType;
-  submittedData?: unknown;
-  appResult?: unknown;
-  status: 'success' | 'failure' | 'error';
-  errorMessage?: string;
-}
-
-export interface MouseLogPayload {
-  logType: 'mouse';
-  timestamp: string;
-  sessionId: string;
-  userId: string;
-  pagePath: string;
-  x: number;
-  y: number;
-  viewportWidth: number;
-  viewportHeight: number;
-}
-
 /**
  * Gets or creates a session ID stored in sessionStorage.
  */
@@ -59,19 +36,7 @@ export const getSessionId = (): string => {
 };
 
 /**
- * Gets the user identifier (hash of email if available).
- */
-const getUserId = (): string => {
-  if (typeof window === 'undefined') return 'anonymous';
-  const email = localStorage.getItem('huji_user_email');
-  if (!email) return 'anonymous';
-  
-  // Simple "hash" for userId privacy
-  return btoa(email).substring(0, 10);
-};
-
-/**
- * Logs an event to the backend API proxy.
+ * Logs an event to Supabase.
  */
 export const logEvent = async (
   eventType: EventType, 
@@ -80,61 +45,61 @@ export const logEvent = async (
   status: 'success' | 'failure' | 'error' = 'success',
   errorMessage?: string
 ) => {
-  const payload: LogPayload = {
-    logType: 'event',
-    timestamp: new Date().toISOString(),
-    sessionId: getSessionId(),
-    userId: getUserId(),
-    pagePath: typeof window !== 'undefined' ? window.location.pathname : '',
-    eventType,
-    submittedData: submittedData || {},
-    appResult: appResult || {},
-    status,
-    errorMessage: errorMessage || ''
-  };
-
-  console.log("[LOG:SENDING]", payload);
-
   try {
-    const response = await fetch('/api/log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      console.log("[LOG:SKIP] No active session for logging", eventType);
+      return;
+    }
 
-    const result = await response.json();
-    
-    if (result.success) {
-      console.log("[LOG:SENT:SUCCESS]");
-    } else {
-      console.error("[LOG:WEBHOOK_FAILED]", result.error);
+    const payload = {
+      user_id: session.user.id,
+      session_id: getSessionId(),
+      event_type: eventType,
+      page_path: typeof window !== 'undefined' ? window.location.pathname : '',
+      submitted_data: submittedData || {},
+      app_result: appResult || {},
+      status,
+      error_message: errorMessage || ''
+    };
+
+    console.log("[LOG:SENDING:SUPABASE]", eventType);
+
+    const { error } = await supabase
+      .from('event_logs')
+      .insert(payload);
+
+    if (error) {
+      console.error("[LOG:SUPABASE_ERROR]", error);
     }
   } catch (error) {
-    console.error("[LOG:API_ROUTE_FAILED]", error);
+    console.error("[LOG:API_FAILED]", error);
   }
 };
 
 /**
- * Logs mouse movement to the backend API proxy.
+ * Logs mouse movement to Supabase.
  */
 export const logMouseMovement = async (data: { x: number, y: number, viewportWidth: number, viewportHeight: number }) => {
-  const payload: MouseLogPayload = {
-    logType: 'mouse',
-    timestamp: new Date().toISOString(),
-    sessionId: getSessionId(),
-    userId: getUserId(),
-    pagePath: typeof window !== 'undefined' ? window.location.pathname : '',
-    ...data
-  };
-
   try {
-    fetch('/api/log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return;
+
+    const payload = {
+      user_id: session.user.id,
+      session_id: getSessionId(),
+      page_path: typeof window !== 'undefined' ? window.location.pathname : '',
+      x: data.x,
+      y: data.y,
+      viewport_width: data.viewportWidth,
+      viewport_height: data.viewportHeight
+    };
+
+    // Fail silently for mouse movements to avoid UI lag
+    supabase.from('mouse_logs').insert(payload).then(({ error }) => {
+      if (error) console.warn("[LOG:MOUSE:ERROR]", error.message);
     });
-    // We don't log every mouse movement to console to avoid clutter
   } catch (error) {
-    // Fail silently for mouse movements
+    // Fail silently
   }
 };
